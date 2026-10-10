@@ -1,0 +1,43 @@
+name: Audit sector mapping
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "audit_sector_mapping.py"
+      - "config/sector_mapping.csv"
+      - "data/raw/**"
+      - "process_portfolios.py"
+      - ".github/workflows/audit-sector-mapping.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  audit-mapping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out project files
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Install Excel-reading library
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+
+      - name: Generate observed industry-to-sector mapping audit
+        run: python audit_sector_mapping.py
+
+      - name: Save mapping audit for review
+        uses: actions/upload-artifact@v6
+        with:
+          name: sector-mapping-audit
+          path: |
+            reports/sector_mapping_audit.csv
+            reports/sector_mapping_audit_summary.json
+          if-no-files-found: error
