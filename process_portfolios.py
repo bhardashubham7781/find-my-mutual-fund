@@ -75,7 +75,7 @@ def canonical_scheme_name(value: Any) -> str:
     ]:
         text = re.sub(r"\b" + joined + r"\b", spaced, text)
     # Remove plan labels wherever they occur; then remove common trailing options.
-    text = re.sub(r"\\b(direct plan|regular plan|institutional plan)\\b", " ", text)
+    text = re.sub(r"\b(direct plan|regular plan|institutional plan)\b", " ", text)
     suffixes = [
         "growth option", "growth", "idcw payout", "idcw reinvestment", "idcw",
         "dividend payout", "dividend reinvestment", "dividend option", "dividend",
