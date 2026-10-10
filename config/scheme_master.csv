@@ -75,7 +75,7 @@ DSP Mutual Fund,DSP Midcap Fund - Direct Plan - Growth,119071,Mid Cap,Direct Pla
 DSP Mutual Fund,DSP Multi Cap Fund - Direct Plan - Growth,152310,Multi Cap,Direct Plan,Growth,false
 DSP Mutual Fund,DSP Small Cap Fund - Direct Plan - Growth,119212,Small Cap,Direct Plan,Growth,false
 HDFC Mutual Fund,HDFC ELSS - Tax Saver Fund - Direct Plan - Growth,119060,ELSS,Direct Plan,Growth,false
-HDFC Mutual Fund,HDFC Flexi Cap Fund - Direct Plan - Growth,118955,Flexi Cap,Direct Plan,Growth,false
+HDFC Mutual Fund,HDFC Flexi Cap Fund - Direct Plan - Growth,118955,Flexi Cap,Direct Plan,Growth,true
 HDFC Mutual Fund,HDFC BSE 500 Index Fund - Direct Plan - Growth,151728,Index Fund,Direct Plan,Growth,false
 HDFC Mutual Fund,HDFC BSE India Sector Leaders Index Fund - Direct Plan - Growth,153959,Index Fund,Direct Plan,Growth,false
 HDFC Mutual Fund,HDFC BSE REITS and Commercial Real Estate Index Fund - Direct Plan - Growth,154753,Index Fund,Direct Plan,Growth,false
@@ -111,51 +111,51 @@ HDFC Mutual Fund,HDFC MNC Fund - Direct Plan - Growth,151458,Sectoral/Thematic,D
 HDFC Mutual Fund,HDFC Pharma and Healthcare Fund - Direct Plan - Growth,152082,Sectoral/Thematic,Direct Plan,Growth,false
 HDFC Mutual Fund,HDFC Transportation and Logistics Fund - Direct Plan - Growth,151901,Sectoral/Thematic,Direct Plan,Growth,false
 HDFC Mutual Fund,HDFC Small Cap Fund - Direct Plan - Growth,130503,Small Cap,Direct Plan,Growth,false
-ICICI Prudential Mutual Fund,ICICI Prudential ELSS - Tax Saver Fund - Direct Plan - Growth,120592,ELSS,Direct Plan,Growth,false
-ICICI Prudential Mutual Fund,ICICI Prudential Flexi Cap fund - Direct Plan - Growth,148990,Flexi Cap,Direct Plan,Growth,false
-ICICI Prudential Mutual Fund,ICICI Prudential NASDAQ 100 Index Fund - Direct Plan - Growth,149219,Index Fund,Direct Plan,Growth,false
-ICICI Prudential Mutual Fund,ICICI Prudential Nifty 200 Momentum 30 Index Fund - Direct Plan - Growth,150452,Index Fund,Direct Plan,Growth,false
-ICICI Prudential Mutual Fund,ICICI Prudential Nifty 500 Index Fund - Direct Plan - Growth,153161,Index Fund,Direct Plan,Growth,false
-ICICI Prudential Mutual Fund,ICICI Prudential Nifty Auto Index Fund - Direct Plan - Growth,150643,Index Fund,Direct Plan,Growth,false
-ICICI Prudential Mutual Fund,ICICI Prudential Nifty Bank Index Fund - Direct Plan - Growth,149858,Index Fund,Direct Plan,Growth,false
-ICICI Prudential Mutual Fund,ICICI Prudential Nifty IT Index Fund - Direct Plan - Growth,150468,Index Fund,Direct Plan,Growth,false
-ICICI Prudential Mutual Fund,ICICI Prudential Nifty LargeMidcap 250 Index Fund - Direct Plan - Growth,152482,Index Fund,Direct Plan,Growth,false
-ICICI Prudential Mutual Fund,ICICI Prudential Nifty Midcap 150 Index Fund - Direct Plan - Growth,149389,Index Fund,Direct Plan,Growth,false
-ICICI Prudential Mutual Fund,ICICI Prudential Nifty Next 50 Index Fund - Direct Plan - Growth,120684,Index Fund,Direct Plan,Growth,false
-ICICI Prudential Mutual Fund,ICICI Prudential Nifty Pharma Index Fund - Direct Plan - Growth,150930,Index Fund,Direct Plan,Growth,false
-ICICI Prudential Mutual Fund,ICICI Prudential Nifty Private Bank Index Fund - Direct Plan - Growth,153679,Index Fund,Direct Plan,Growth,false
-ICICI Prudential Mutual Fund,ICICI Prudential Nifty Smallcap 250 Index Fund - Direct Plan - Growth,149283,Index Fund,Direct Plan,Growth,false
-ICICI Prudential Mutual Fund,ICICI Prudential Nifty Top 15 Equal Weight Index Fund - Direct Plan - Growth,153614,Index Fund,Direct Plan,Growth,false
-ICICI Prudential Mutual Fund,ICICI Prudential Nifty200 Quality 30 Index Fund - Direct Plan - Growth,153546,Index Fund,Direct Plan,Growth,false
-ICICI Prudential Mutual Fund,ICICI Prudential Nifty200 Value 30 Index Fund - Direct Plan - Growth,152936,Index Fund,Direct Plan,Growth,false
-ICICI Prudential Mutual Fund,ICICI Prudential Nifty50 Equal Weight Index Fund- - Direct Plan - Growth,150639,Index Fund,Direct Plan,Growth,false
-ICICI Prudential Mutual Fund,ICICI Prudential Nifty50 Value 20 Index Fund - Direct Plan - Growth,152365,Index Fund,Direct Plan,Growth,false
-ICICI Prudential Mutual Fund,ICICI Prudential Large Cap Fund (erstwhile Bluechip Fund) - Direct Plan - Growth,120586,Large Cap,Direct Plan,Growth,false
-ICICI Prudential Mutual Fund,ICICI Prudential Mid Cap Fund - Direct Plan - Growth,120381,Mid Cap,Direct Plan,Growth,false
-ICICI Prudential Mutual Fund,ICICI Prudential Multi Cap Fund - Direct Plan - Growth,120599,Multi Cap,Direct Plan,Growth,false
-ICICI Prudential Mutual Fund,ICICI PRUDENTIAL PSU EQUITY FUND - Direct Plan - Growth,150539,PSU,Direct Plan,Growth,false
-ICICI Prudential Mutual Fund,ICICI Prudential Active Momentum Fund - Direct Plan - Growth,153684,Sectoral/Thematic,Direct Plan,Growth,false
-ICICI Prudential Mutual Fund,ICICI Prudential Banking & Financial Services Fund - Direct Plan - Growth,120244,Sectoral/Thematic,Direct Plan,Growth,false
-ICICI Prudential Mutual Fund,ICICI Prudential Bharat Consumption Fund - Direct Plan - Growth,146951,Sectoral/Thematic,Direct Plan,Growth,false
-ICICI Prudential Mutual Fund,ICICI Prudential Business Cycle Fund - Direct Plan - Growth,148651,Sectoral/Thematic,Direct Plan,Growth,false
-ICICI Prudential Mutual Fund,ICICI Prudential Commodities Fund - Direct Plan - Growth,147662,Sectoral/Thematic,Direct Plan,Growth,false
-ICICI Prudential Mutual Fund,ICICI Prudential Conglomerate Fund - Direct Plan - Growth,153867,Sectoral/Thematic,Direct Plan,Growth,false
-ICICI Prudential Mutual Fund,ICICI PRUDENTIAL ENERGY OPPORTUNITIES FUND - Direct Plan - Growth,152728,Sectoral/Thematic,Direct Plan,Growth,false
-ICICI Prudential Mutual Fund,ICICI Prudential Equity Minimum Variance Fund - Direct Plan - Growth,153070,Sectoral/Thematic,Direct Plan,Growth,false
-ICICI Prudential Mutual Fund,ICICI Prudential ESG Exclusionary Strategy Fund - Direct Plan - Growth,148516,Sectoral/Thematic,Direct Plan,Growth,false
-ICICI Prudential Mutual Fund,ICICI Prudential Exports & Services Fund - Direct Plan - Growth,120688,Sectoral/Thematic,Direct Plan,Growth,false
-ICICI Prudential Mutual Fund,ICICI Prudential FMCG Fund - Direct Plan - Growth,120587,Sectoral/Thematic,Direct Plan,Growth,false
-ICICI Prudential Mutual Fund,ICICI PRUDENTIAL HOUSING OPPORTUNITIES FUND - Direct Plan - Growth,150310,Sectoral/Thematic,Direct Plan,Growth,false
-ICICI Prudential Mutual Fund,ICICI Prudential Infrastructure Fund - Direct Plan - Growth,120621,Sectoral/Thematic,Direct Plan,Growth,false
-ICICI Prudential Mutual Fund,ICICI Prudential Innovation Fund - Direct Plan - Growth,151580,Sectoral/Thematic,Direct Plan,Growth,false
-ICICI Prudential Mutual Fund,ICICI Prudential MNC Fund - Direct Plan - Growth,147346,Sectoral/Thematic,Direct Plan,Growth,false
-ICICI Prudential Mutual Fund,ICICI Prudential Quality Fund - Direct Plan - Growth,153458,Sectoral/Thematic,Direct Plan,Growth,false
-ICICI Prudential Mutual Fund,ICICI Prudential QUANT FUND - Direct Plan - Growth,148600,Sectoral/Thematic,Direct Plan,Growth,false
-ICICI Prudential Mutual Fund,ICICI Prudential Rural Opportunities Fund - Direct Plan - Growth,153184,Sectoral/Thematic,Direct Plan,Growth,false
-ICICI Prudential Mutual Fund,ICICI Prudential Technology Fund - Direct Plan - Growth,120594,Sectoral/Thematic,Direct Plan,Growth,false
-ICICI Prudential Mutual Fund,ICICI PRUDENTIAL TRANSPORTATION AND LOGISTICS FUND - Direct Plan - Growth,150685,Sectoral/Thematic,Direct Plan,Growth,false
-ICICI Prudential Mutual Fund,ICICI Prudential US Bluechip Equity Fund - Direct Plan - Growth,120186,Sectoral/Thematic,Direct Plan,Growth,false
-ICICI Prudential Mutual Fund,ICICI Prudential Small Cap Fund - Direct Plan - Growth,120591,Small Cap,Direct Plan,Growth,false
+ICICI Prudential Mutual Fund,ICICI Prudential ELSS - Tax Saver Fund - Direct Plan - Growth,120592,ELSS,Direct Plan,Growth,true
+ICICI Prudential Mutual Fund,ICICI Prudential Flexi Cap fund - Direct Plan - Growth,148990,Flexi Cap,Direct Plan,Growth,true
+ICICI Prudential Mutual Fund,ICICI Prudential NASDAQ 100 Index Fund - Direct Plan - Growth,149219,Index Fund,Direct Plan,Growth,true
+ICICI Prudential Mutual Fund,ICICI Prudential Nifty 200 Momentum 30 Index Fund - Direct Plan - Growth,150452,Index Fund,Direct Plan,Growth,true
+ICICI Prudential Mutual Fund,ICICI Prudential Nifty 500 Index Fund - Direct Plan - Growth,153161,Index Fund,Direct Plan,Growth,true
+ICICI Prudential Mutual Fund,ICICI Prudential Nifty Auto Index Fund - Direct Plan - Growth,150643,Index Fund,Direct Plan,Growth,true
+ICICI Prudential Mutual Fund,ICICI Prudential Nifty Bank Index Fund - Direct Plan - Growth,149858,Index Fund,Direct Plan,Growth,true
+ICICI Prudential Mutual Fund,ICICI Prudential Nifty IT Index Fund - Direct Plan - Growth,150468,Index Fund,Direct Plan,Growth,true
+ICICI Prudential Mutual Fund,ICICI Prudential Nifty LargeMidcap 250 Index Fund - Direct Plan - Growth,152482,Index Fund,Direct Plan,Growth,true
+ICICI Prudential Mutual Fund,ICICI Prudential Nifty Midcap 150 Index Fund - Direct Plan - Growth,149389,Index Fund,Direct Plan,Growth,true
+ICICI Prudential Mutual Fund,ICICI Prudential Nifty Next 50 Index Fund - Direct Plan - Growth,120684,Index Fund,Direct Plan,Growth,true
+ICICI Prudential Mutual Fund,ICICI Prudential Nifty Pharma Index Fund - Direct Plan - Growth,150930,Index Fund,Direct Plan,Growth,true
+ICICI Prudential Mutual Fund,ICICI Prudential Nifty Private Bank Index Fund - Direct Plan - Growth,153679,Index Fund,Direct Plan,Growth,true
+ICICI Prudential Mutual Fund,ICICI Prudential Nifty Smallcap 250 Index Fund - Direct Plan - Growth,149283,Index Fund,Direct Plan,Growth,true
+ICICI Prudential Mutual Fund,ICICI Prudential Nifty Top 15 Equal Weight Index Fund - Direct Plan - Growth,153614,Index Fund,Direct Plan,Growth,true
+ICICI Prudential Mutual Fund,ICICI Prudential Nifty200 Quality 30 Index Fund - Direct Plan - Growth,153546,Index Fund,Direct Plan,Growth,true
+ICICI Prudential Mutual Fund,ICICI Prudential Nifty200 Value 30 Index Fund - Direct Plan - Growth,152936,Index Fund,Direct Plan,Growth,true
+ICICI Prudential Mutual Fund,ICICI Prudential Nifty50 Equal Weight Index Fund- - Direct Plan - Growth,150639,Index Fund,Direct Plan,Growth,true
+ICICI Prudential Mutual Fund,ICICI Prudential Nifty50 Value 20 Index Fund - Direct Plan - Growth,152365,Index Fund,Direct Plan,Growth,true
+ICICI Prudential Mutual Fund,ICICI Prudential Large Cap Fund (erstwhile Bluechip Fund) - Direct Plan - Growth,120586,Large Cap,Direct Plan,Growth,true
+ICICI Prudential Mutual Fund,ICICI Prudential Mid Cap Fund - Direct Plan - Growth,120381,Mid Cap,Direct Plan,Growth,true
+ICICI Prudential Mutual Fund,ICICI Prudential Multi Cap Fund - Direct Plan - Growth,120599,Multi Cap,Direct Plan,Growth,true
+ICICI Prudential Mutual Fund,ICICI PRUDENTIAL PSU EQUITY FUND - Direct Plan - Growth,150539,PSU,Direct Plan,Growth,true
+ICICI Prudential Mutual Fund,ICICI Prudential Active Momentum Fund - Direct Plan - Growth,153684,Sectoral/Thematic,Direct Plan,Growth,true
+ICICI Prudential Mutual Fund,ICICI Prudential Banking & Financial Services Fund - Direct Plan - Growth,120244,Sectoral/Thematic,Direct Plan,Growth,true
+ICICI Prudential Mutual Fund,ICICI Prudential Bharat Consumption Fund - Direct Plan - Growth,146951,Sectoral/Thematic,Direct Plan,Growth,true
+ICICI Prudential Mutual Fund,ICICI Prudential Business Cycle Fund - Direct Plan - Growth,148651,Sectoral/Thematic,Direct Plan,Growth,true
+ICICI Prudential Mutual Fund,ICICI Prudential Commodities Fund - Direct Plan - Growth,147662,Sectoral/Thematic,Direct Plan,Growth,true
+ICICI Prudential Mutual Fund,ICICI Prudential Conglomerate Fund - Direct Plan - Growth,153867,Sectoral/Thematic,Direct Plan,Growth,true
+ICICI Prudential Mutual Fund,ICICI PRUDENTIAL ENERGY OPPORTUNITIES FUND - Direct Plan - Growth,152728,Sectoral/Thematic,Direct Plan,Growth,true
+ICICI Prudential Mutual Fund,ICICI Prudential Equity Minimum Variance Fund - Direct Plan - Growth,153070,Sectoral/Thematic,Direct Plan,Growth,true
+ICICI Prudential Mutual Fund,ICICI Prudential ESG Exclusionary Strategy Fund - Direct Plan - Growth,148516,Sectoral/Thematic,Direct Plan,Growth,true
+ICICI Prudential Mutual Fund,ICICI Prudential Exports & Services Fund - Direct Plan - Growth,120688,Sectoral/Thematic,Direct Plan,Growth,true
+ICICI Prudential Mutual Fund,ICICI Prudential FMCG Fund - Direct Plan - Growth,120587,Sectoral/Thematic,Direct Plan,Growth,true
+ICICI Prudential Mutual Fund,ICICI PRUDENTIAL HOUSING OPPORTUNITIES FUND - Direct Plan - Growth,150310,Sectoral/Thematic,Direct Plan,Growth,true
+ICICI Prudential Mutual Fund,ICICI Prudential Infrastructure Fund - Direct Plan - Growth,120621,Sectoral/Thematic,Direct Plan,Growth,true
+ICICI Prudential Mutual Fund,ICICI Prudential Innovation Fund - Direct Plan - Growth,151580,Sectoral/Thematic,Direct Plan,Growth,true
+ICICI Prudential Mutual Fund,ICICI Prudential MNC Fund - Direct Plan - Growth,147346,Sectoral/Thematic,Direct Plan,Growth,true
+ICICI Prudential Mutual Fund,ICICI Prudential Quality Fund - Direct Plan - Growth,153458,Sectoral/Thematic,Direct Plan,Growth,true
+ICICI Prudential Mutual Fund,ICICI Prudential QUANT FUND - Direct Plan - Growth,148600,Sectoral/Thematic,Direct Plan,Growth,true
+ICICI Prudential Mutual Fund,ICICI Prudential Rural Opportunities Fund - Direct Plan - Growth,153184,Sectoral/Thematic,Direct Plan,Growth,true
+ICICI Prudential Mutual Fund,ICICI Prudential Technology Fund - Direct Plan - Growth,120594,Sectoral/Thematic,Direct Plan,Growth,true
+ICICI Prudential Mutual Fund,ICICI PRUDENTIAL TRANSPORTATION AND LOGISTICS FUND - Direct Plan - Growth,150685,Sectoral/Thematic,Direct Plan,Growth,true
+ICICI Prudential Mutual Fund,ICICI Prudential US Bluechip Equity Fund - Direct Plan - Growth,120186,Sectoral/Thematic,Direct Plan,Growth,true
+ICICI Prudential Mutual Fund,ICICI Prudential Small Cap Fund - Direct Plan - Growth,120591,Small Cap,Direct Plan,Growth,true
 Kotak Mahindra Mutual Fund,Kotak ELSS Tax Saver Fund - Direct Plan - Growth,119773,ELSS,Direct Plan,Growth,false
 Kotak Mahindra Mutual Fund,Kotak Flexi Cap Fund - Direct Plan - Growth,120166,Flexi Cap,Direct Plan,Growth,false
 Kotak Mahindra Mutual Fund,Kotak BSE Housing Index Fund - Direct Plan - Growth,152039,Index Fund,Direct Plan,Growth,false
@@ -238,44 +238,44 @@ Nippon India Mutual Fund,Nippon India Multi Cap Fund - Direct Plan - Growth,1186
 Nippon India Mutual Fund,Nippon India Innovation Fund - Direct Plan - Growth,152033,Sectoral/Thematic,Direct Plan,Growth,false
 Nippon India Mutual Fund,Nippon India Quant Fund - Direct Plan - Growth,118769,Sectoral/Thematic,Direct Plan,Growth,false
 Nippon India Mutual Fund,Nippon India Small Cap Fund - Direct Plan - Growth,118778,Small Cap,Direct Plan,Growth,false
-SBI Mutual Fund,SBI ELSS Tax Saver Fund - Direct Plan - Growth,119723,ELSS,Direct Plan,Growth,false
-SBI Mutual Fund,SBI Long Term Advantage Fund - Series IV - Direct Plan - Growth,140487,ELSS,Direct Plan,Growth,false
-SBI Mutual Fund,SBI Long Term Advantage Fund - Series V - Direct Plan - Growth,142138,ELSS,Direct Plan,Growth,false
-SBI Mutual Fund,SBI Long Term Advantage Fund - Series VI - Direct Plan - Growth,143178,ELSS,Direct Plan,Growth,false
-SBI Mutual Fund,SBI FLEXICAP FUND - Direct Plan - Growth,119718,Flexi Cap,Direct Plan,Growth,false
-SBI Mutual Fund,SBI BSE PSU BANK INDEX FUND - Direct Plan - Growth,153432,Index Fund,Direct Plan,Growth,false
-SBI Mutual Fund,SBI BSE Sensex Index Fund - Direct Plan - Growth,151769,Index Fund,Direct Plan,Growth,false
-SBI Mutual Fund,SBI Nifty 500 Index Fund - Direct Plan - Growth,152908,Index Fund,Direct Plan,Growth,false
-SBI Mutual Fund,SBI Nifty Bank Index Fund - Direct Plan - Growth,153250,Index Fund,Direct Plan,Growth,false
-SBI Mutual Fund,SBI NIFTY INDEX FUND - Direct Plan - Growth,119827,Index Fund,Direct Plan,Growth,false
-SBI Mutual Fund,SBI Nifty India Consumption Index Fund - Direct Plan - Growth,153015,Index Fund,Direct Plan,Growth,false
-SBI Mutual Fund,SBI Nifty IT Index Fund - Direct Plan - Growth,153320,Index Fund,Direct Plan,Growth,false
-SBI Mutual Fund,SBI Nifty Midcap 150 Index Fund - Direct Plan - Growth,150673,Index Fund,Direct Plan,Growth,false
-SBI Mutual Fund,SBI Nifty Next 50 Index Fund - Direct Plan - Growth,148945,Index Fund,Direct Plan,Growth,false
-SBI Mutual Fund,SBI Nifty Smallcap 250 Index Fund - Direct Plan - Growth,150677,Index Fund,Direct Plan,Growth,false
-SBI Mutual Fund,SBI Nifty100 Low Volatility 30 Index Fund - Direct Plan - Growth,153718,Index Fund,Direct Plan,Growth,false
-SBI Mutual Fund,SBI Nifty200 Momentum 30 Index Fund - Direct Plan - Growth,153662,Index Fund,Direct Plan,Growth,false
-SBI Mutual Fund,SBI Nifty200 Quality 30 Index Fund - Direct Plan - Growth,153555,Index Fund,Direct Plan,Growth,false
-SBI Mutual Fund,SBI Nifty50 Equal Weight Index Fund - Direct Plan - Growth,152370,Index Fund,Direct Plan,Growth,false
-SBI Mutual Fund,SBI Large Cap Fund - Direct Plan - Growth,119598,Large Cap,Direct Plan,Growth,false
-SBI Mutual Fund,SBI MIDCAP FUND - Direct Plan - Growth,119716,Mid Cap,Direct Plan,Growth,false
-SBI Mutual Fund,SBI MultiCap Fund - Direct Plan - Growth,149882,Multi Cap,Direct Plan,Growth,false
-SBI Mutual Fund,SBI PSU FUND - Direct Plan - Growth,119732,PSU,Direct Plan,Growth,false
-SBI Mutual Fund,SBI Automotive Opportunities Fund - Direct Plan - Growth,152657,Sectoral/Thematic,Direct Plan,Growth,false
-SBI Mutual Fund,SBI BANKING & FINANCIAL SERVICES FUND - Direct Plan - Growth,133859,Sectoral/Thematic,Direct Plan,Growth,false
-SBI Mutual Fund,SBI COMMA FUND - Direct Plan - Growth,119705,Sectoral/Thematic,Direct Plan,Growth,false
-SBI Mutual Fund,SBI CONSUMPTION OPPORTUNITIES FUND - Direct Plan - Growth,120575,Sectoral/Thematic,Direct Plan,Growth,false
-SBI Mutual Fund,SBI Energy Opportunities Fund - Direct Plan - Growth,152417,Sectoral/Thematic,Direct Plan,Growth,false
-SBI Mutual Fund,SBI Equity Minimum Variance Fund - Direct Plan - Growth,146643,Sectoral/Thematic,Direct Plan,Growth,false
-SBI Mutual Fund,SBI ESG Exclusionary Strategy Fund - Direct Plan - Growth,119709,Sectoral/Thematic,Direct Plan,Growth,false
-SBI Mutual Fund,SBI HEALTHCARE OPPORTUNITIES FUND - Direct Plan - Growth,119783,Sectoral/Thematic,Direct Plan,Growth,false
-SBI Mutual Fund,SBI INFRASTRUCTURE FUND - Direct Plan - Growth,119700,Sectoral/Thematic,Direct Plan,Growth,false
-SBI Mutual Fund,SBI Innovative Opportunities Fund - Direct Plan - Growth,152776,Sectoral/Thematic,Direct Plan,Growth,false
-SBI Mutual Fund,SBI MNC FUND - Direct Plan - Growth,119711,Sectoral/Thematic,Direct Plan,Growth,false
-SBI Mutual Fund,SBI Quality Fund - Direct Plan - Growth,154177,Sectoral/Thematic,Direct Plan,Growth,false
-SBI Mutual Fund,SBI Quant Fund - Direct Plan - Growth,153154,Sectoral/Thematic,Direct Plan,Growth,false
-SBI Mutual Fund,SBI TECHNOLOGY OPPORTUNITIES FUND - Direct Plan - Growth,120578,Sectoral/Thematic,Direct Plan,Growth,false
-SBI Mutual Fund,SBI SMALL CAP FUND - Direct Plan - Growth,125497,Small Cap,Direct Plan,Growth,false
+SBI Mutual Fund,SBI ELSS Tax Saver Fund - Direct Plan - Growth,119723,ELSS,Direct Plan,Growth,true
+SBI Mutual Fund,SBI Long Term Advantage Fund - Series IV - Direct Plan - Growth,140487,ELSS,Direct Plan,Growth,true
+SBI Mutual Fund,SBI Long Term Advantage Fund - Series V - Direct Plan - Growth,142138,ELSS,Direct Plan,Growth,true
+SBI Mutual Fund,SBI Long Term Advantage Fund - Series VI - Direct Plan - Growth,143178,ELSS,Direct Plan,Growth,true
+SBI Mutual Fund,SBI FLEXICAP FUND - Direct Plan - Growth,119718,Flexi Cap,Direct Plan,Growth,true
+SBI Mutual Fund,SBI BSE PSU BANK INDEX FUND - Direct Plan - Growth,153432,Index Fund,Direct Plan,Growth,true
+SBI Mutual Fund,SBI BSE Sensex Index Fund - Direct Plan - Growth,151769,Index Fund,Direct Plan,Growth,true
+SBI Mutual Fund,SBI Nifty 500 Index Fund - Direct Plan - Growth,152908,Index Fund,Direct Plan,Growth,true
+SBI Mutual Fund,SBI Nifty Bank Index Fund - Direct Plan - Growth,153250,Index Fund,Direct Plan,Growth,true
+SBI Mutual Fund,SBI NIFTY INDEX FUND - Direct Plan - Growth,119827,Index Fund,Direct Plan,Growth,true
+SBI Mutual Fund,SBI Nifty India Consumption Index Fund - Direct Plan - Growth,153015,Index Fund,Direct Plan,Growth,true
+SBI Mutual Fund,SBI Nifty IT Index Fund - Direct Plan - Growth,153320,Index Fund,Direct Plan,Growth,true
+SBI Mutual Fund,SBI Nifty Midcap 150 Index Fund - Direct Plan - Growth,150673,Index Fund,Direct Plan,Growth,true
+SBI Mutual Fund,SBI Nifty Next 50 Index Fund - Direct Plan - Growth,148945,Index Fund,Direct Plan,Growth,true
+SBI Mutual Fund,SBI Nifty Smallcap 250 Index Fund - Direct Plan - Growth,150677,Index Fund,Direct Plan,Growth,true
+SBI Mutual Fund,SBI Nifty100 Low Volatility 30 Index Fund - Direct Plan - Growth,153718,Index Fund,Direct Plan,Growth,true
+SBI Mutual Fund,SBI Nifty200 Momentum 30 Index Fund - Direct Plan - Growth,153662,Index Fund,Direct Plan,Growth,true
+SBI Mutual Fund,SBI Nifty200 Quality 30 Index Fund - Direct Plan - Growth,153555,Index Fund,Direct Plan,Growth,true
+SBI Mutual Fund,SBI Nifty50 Equal Weight Index Fund - Direct Plan - Growth,152370,Index Fund,Direct Plan,Growth,true
+SBI Mutual Fund,SBI Large Cap Fund - Direct Plan - Growth,119598,Large Cap,Direct Plan,Growth,true
+SBI Mutual Fund,SBI MIDCAP FUND - Direct Plan - Growth,119716,Mid Cap,Direct Plan,Growth,true
+SBI Mutual Fund,SBI MultiCap Fund - Direct Plan - Growth,149882,Multi Cap,Direct Plan,Growth,true
+SBI Mutual Fund,SBI PSU FUND - Direct Plan - Growth,119732,PSU,Direct Plan,Growth,true
+SBI Mutual Fund,SBI Automotive Opportunities Fund - Direct Plan - Growth,152657,Sectoral/Thematic,Direct Plan,Growth,true
+SBI Mutual Fund,SBI BANKING & FINANCIAL SERVICES FUND - Direct Plan - Growth,133859,Sectoral/Thematic,Direct Plan,Growth,true
+SBI Mutual Fund,SBI COMMA FUND - Direct Plan - Growth,119705,Sectoral/Thematic,Direct Plan,Growth,true
+SBI Mutual Fund,SBI CONSUMPTION OPPORTUNITIES FUND - Direct Plan - Growth,120575,Sectoral/Thematic,Direct Plan,Growth,true
+SBI Mutual Fund,SBI Energy Opportunities Fund - Direct Plan - Growth,152417,Sectoral/Thematic,Direct Plan,Growth,true
+SBI Mutual Fund,SBI Equity Minimum Variance Fund - Direct Plan - Growth,146643,Sectoral/Thematic,Direct Plan,Growth,true
+SBI Mutual Fund,SBI ESG Exclusionary Strategy Fund - Direct Plan - Growth,119709,Sectoral/Thematic,Direct Plan,Growth,true
+SBI Mutual Fund,SBI HEALTHCARE OPPORTUNITIES FUND - Direct Plan - Growth,119783,Sectoral/Thematic,Direct Plan,Growth,true
+SBI Mutual Fund,SBI INFRASTRUCTURE FUND - Direct Plan - Growth,119700,Sectoral/Thematic,Direct Plan,Growth,true
+SBI Mutual Fund,SBI Innovative Opportunities Fund - Direct Plan - Growth,152776,Sectoral/Thematic,Direct Plan,Growth,true
+SBI Mutual Fund,SBI MNC FUND - Direct Plan - Growth,119711,Sectoral/Thematic,Direct Plan,Growth,true
+SBI Mutual Fund,SBI Quality Fund - Direct Plan - Growth,154177,Sectoral/Thematic,Direct Plan,Growth,true
+SBI Mutual Fund,SBI Quant Fund - Direct Plan - Growth,153154,Sectoral/Thematic,Direct Plan,Growth,true
+SBI Mutual Fund,SBI TECHNOLOGY OPPORTUNITIES FUND - Direct Plan - Growth,120578,Sectoral/Thematic,Direct Plan,Growth,true
+SBI Mutual Fund,SBI SMALL CAP FUND - Direct Plan - Growth,125497,Small Cap,Direct Plan,Growth,true
 UTI Mutual Fund,UTI ELSS Tax Saver Fund - Direct Plan - Growth,120715,ELSS,Direct Plan,Growth,false
 UTI Mutual Fund,UTI - Flexi Cap Fund. - Direct Plan - Growth,120662,Flexi Cap,Direct Plan,Growth,false
 UTI Mutual Fund,UTI - Nifty Next 50 Index Fund - Direct Plan - Growth,143341,Index Fund,Direct Plan,Growth,false
