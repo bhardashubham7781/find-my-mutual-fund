@@ -1,0 +1,55 @@
+source_industry,standard_sector,notes
+Banks,Banking,Banks are mapped to the Banking sector.
+Finance,Financial Services,Non-bank finance companies and other finance classifications.
+Pharmaceuticals & Biotechnology,Pharma & Healthcare,Pharmaceutical and biotechnology companies.
+Auto Components,Auto,Auto parts and components.
+IT - Software,IT,Software industry as disclosed by the AMC.
+Software,IT,Software industry label used in some holdings.
+Industrial Products,Capital Goods,Industrial products and components.
+Consumer Durables,Consumer Durables,Consumer durable goods.
+Power,Power,Power generation and utility exposure.
+Cement & Cement Products,Construction/Infra,Cement and construction materials.
+Automobiles,Auto,Automobile manufacturers.
+Retailing,Others,No dedicated retail sector in the requested standard sector list.
+Chemicals & Petrochemicals,Chemicals,Chemical and petrochemical companies.
+Electrical Equipment,Capital Goods,Electrical equipment manufacturers.
+Capital Markets,Financial Services,Capital markets and market-infrastructure businesses.
+Realty,Realty,Real estate and realty companies.
+Insurance,Financial Services,Insurance companies are included in Financial Services.
+Healthcare Services,Pharma & Healthcare,Healthcare service providers.
+Construction,Construction/Infra,Construction and infrastructure-related companies.
+Leisure Services,Others,No dedicated leisure sector in the requested standard sector list.
+Ferrous Metals,Metals & Mining,Ferrous metals.
+Telecom - Services,Telecom,Telecommunication services.
+Petroleum Products,Energy/Oil & Gas,Petroleum products.
+Food Products,FMCG,Food product companies; review individual classifications as needed.
+Industrial Manufacturing,Capital Goods,Industrial manufacturing and engineering.
+Textiles & Apparels,Others,No dedicated textile/apparel sector in the requested standard sector list.
+Transport Services,Others,No dedicated transport sector in the requested standard sector list.
+Agricultural Food & other Products,FMCG,Initial grouping; review against the disclosure classification.
+Personal Products,FMCG,Personal care and product companies.
+Gas,Energy/Oil & Gas,Gas-related companies.
+Non - Ferrous Metals,Metals & Mining,Non-ferrous metals.
+Beverages,FMCG,Beverage companies.
+IT - Services,IT,IT services.
+Aerospace & Defense,Capital Goods,Initial grouping under capital goods; review if a separate sector is later added.
+Diversified FMCG,FMCG,Diversified fast-moving consumer goods companies.
+"Agricultural, Commercial & Construction Vehicles",Auto,Commercial and construction vehicles.
+Oil,Energy/Oil & Gas,Oil-related companies.
+Fertilizers & Agrochemicals,Chemicals,Fertilizers and agrochemicals.
+Transport Infrastructure,Construction/Infra,Transport infrastructure.
+Financial Technology (Fintech),Financial Services,Initial grouping under Financial Services based on the disclosed industry label.
+Minerals & Mining,Metals & Mining,Minerals and mining.
+Metals & Minerals Trading,Metals & Mining,Trading of metals and minerals.
+Commercial Services & Supplies,Others,No dedicated commercial services sector in the requested standard sector list.
+Consumable Fuels,Energy/Oil & Gas,Consumable fuels.
+Entertainment,Others,No dedicated entertainment sector in the requested standard sector list.
+Diversified Metals,Metals & Mining,Diversified metals companies.
+Household Products,FMCG,Household products.
+Telecom - Equipment & Accessories,Telecom,Telecommunications equipment.
+Other Consumer Services,Others,No dedicated other-consumer-services sector in the requested standard sector list.
+Healthcare Equipment & Supplies,Pharma & Healthcare,Healthcare equipment and supplies.
+"Paper, Forest & Jute Products",Others,No dedicated paper/forest/jute sector in the requested standard sector list.
+Cigarettes & Tobacco Products,FMCG,Cigarettes and tobacco products.
+Diversified,Others,Diversified business classifications not mapped to another defined sector.
+IT - Hardware,IT,IT hardware.
