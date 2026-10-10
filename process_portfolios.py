@@ -464,24 +464,18 @@ def process_hdfc_scheme_sheet(
     for row in sheet.iter_rows(min_row=header_row + 1, max_row=sheet.max_row, values_only=True):
         # HDFC section captions and totals are generally in column B, unlike its
         # holding descriptions which are in the "Name Of the Instrument" column.
-        labels = [normalise(v) for v in row[:max(5, instrument_col + 1)] if text_value(v)]
-        joined_labels = " ".join(labels)
+        section_label = normalise(row[1]) if len(row) > 1 else ""
 
-        if any(label == "grand total" for label in labels):
+        if section_label == "grand total":
             reported_total_pct = parse_number(row[percent_col]) if percent_col < len(row) else None
             break
-        if any(label == "equity and equity related" or label.startswith("equity and equity related ") for label in labels):
+        if section_label == "equity and equity related":
             in_equity_section = True
             continue
-        if any(
-            label == "debt instruments"
-            or label == "money market instruments"
-            or label == "others"
-            for label in labels
-        ):
+        if section_label in {"debt instruments", "money market instruments", "others"}:
             in_equity_section = False
             continue
-        if any(label in {"sub total", "total"} for label in labels):
+        if section_label in {"sub total", "total"}:
             continue
 
         instrument = row[instrument_col] if instrument_col < len(row) else None
