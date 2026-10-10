@@ -53,3 +53,61 @@ Healthcare Equipment & Supplies,Pharma & Healthcare,Healthcare equipment and sup
 Cigarettes & Tobacco Products,FMCG,Cigarettes and tobacco products.
 Diversified,Others,Diversified business classifications not mapped to another defined sector.
 IT - Hardware,IT,IT hardware.
+Apparel Retail,Others,Retail classification; no dedicated retail sector in the standard list.
+Application Software,IT,Software applications and software publishers.
+Automobile Manufacturers,Auto,Automobile manufacturers.
+Automotive Retail,Auto,Automotive retail; grouped with the auto sector.
+Biotechnology,Pharma & Healthcare,Biotechnology and life-sciences exposure.
+Building Products,Construction/Infra,Building products and construction materials.
+Cable & Satellite,Telecom,Cable and satellite communications services.
+Commercial Services,Others,Commercial services; no dedicated business services sector in the standard list.
+Communications Equipment,Telecom,Communications network equipment.
+Computer Hardware,IT,Computer hardware.
+Construction Machinery & Heavy,Capital Goods,Construction machinery and heavy equipment.
+Consumer Non Durables,FMCG,Consumer non-durable products.
+Data Processing & Outsourced Services,IT,Data processing and outsourced IT services.
+Distillers & Vintners,FMCG,Beverage producers.
+Diversified Chemicals,Chemicals,Diversified chemical manufacturers.
+Diversified Support Services,Others,Support services; no dedicated business services sector in the standard list.
+Electric Utilities,Power,Electric utilities and power suppliers.
+Exploration & Production,Energy/Oil & Gas,Oil and gas exploration and production.
+Film & Tv,Others,Film and television media; no dedicated media sector in the standard list.
+Financial Services,Financial Services,Financial services classification.
+Footwear,FMCG,Footwear and consumer products.
+Health Care Equipment,Pharma & Healthcare,Healthcare equipment.
+Health Care Technology,Pharma & Healthcare,Healthcare technology.
+Hotels,Others,Hospitality; no dedicated tourism sector in the standard list.
+"Hotels, Resorts & Cruise Lines",Others,Hospitality and leisure services.
+Household Appliances,Consumer Durables,Household appliances.
+Hypermarkets & Super Centers,Others,Retail services; no dedicated retail sector in the standard list.
+Industrial Capital Goods,Capital Goods,Industrial capital goods.
+Industrial Conglomerates,Others,Diversified industrial conglomerates.
+Information Services,IT,Information services and data businesses.
+Interactive Media & Services,Others,Interactive media and digital advertising; media has no dedicated sector in the standard list.
+Internet & Direct Marketing Retail,Others,Online retail; no dedicated retail sector in the standard list.
+It Consulting & Other Services,IT,IT consulting and technology services.
+Media,Others,Media services; no dedicated media sector in the standard list.
+Media & Entertainment,Others,Media and entertainment services.
+Metals & Mining,Metals & Mining,Metals and mining industry classification.
+Movies & Entertainment,Others,Movies and entertainment services.
+Oilfield Services & Equipment,Energy/Oil & Gas,Oilfield services and equipment.
+Other Utilities,Power,Utility services grouped with power in the current standard list.
+Packaged Foods & Meats,FMCG,Packaged food producers.
+Pharmaceuticals,Pharma & Healthcare,Pharmaceutical manufacturers.
+Railroads,Others,Rail transportation; no dedicated transport sector in the standard list.
+Restaurants,Others,Restaurants and food service operators.
+Road & Rail,Others,Road and rail transportation services.
+Semiconductor Equipment,IT,Semiconductor equipment industry.
+Semiconductor Mfg,IT,Semiconductor manufacturing.
+Semiconductors,IT,Semiconductor companies.
+Semiconductors & Semiconductor,IT,Semiconductor industry label as disclosed.
+Soft Drinks,FMCG,Soft drink producers.
+Software & Services,IT,Software and IT services.
+Systems Software,IT,Systems software.
+Technology,IT,Technology industry classification.
+Technology Hardware And Equipment,IT,Technology hardware and equipment.
+"Technology Hardware, Storage & Peripherals",IT,"Technology hardware, storage and peripherals."
+Trading,Others,Trading industry; no dedicated trading sector in the standard list.
+Trading Companies & Distributors,Others,Trading companies and distributors.
+Units of Real Estate Investment Trust (REITs),Realty,Real estate investment trust units.
+Wireless Telecommunication Services,Telecom,Wireless telecommunication services.
