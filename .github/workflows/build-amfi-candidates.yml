@@ -1,0 +1,35 @@
+name: Build AMFI scheme candidates
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "build_amfi_scheme_candidates.py"
+      - ".github/workflows/build-amfi-candidates.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  build-candidates:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out project files
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Download official AMFI scheme list and build review report
+        run: python build_amfi_scheme_candidates.py
+
+      - name: Save candidate list for review
+        uses: actions/upload-artifact@v6
+        with:
+          name: amfi-scheme-candidates
+          path: |
+            reports/amfi_scheme_candidates.csv
+            reports/amfi_scheme_candidates_summary.json
+          if-no-files-found: error
