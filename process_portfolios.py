@@ -13,6 +13,8 @@ import csv
 import json
 import re
 import sys
+import tempfile
+import zipfile
 from collections import Counter, defaultdict
 from datetime import date, datetime
 from pathlib import Path
@@ -137,7 +139,7 @@ def parse_date(value: Any, workbook_epoch: Any = None) -> date | None:
     text = text_value(value)
     if not text:
         return None
-    for fmt in ("%d-%m-%Y", "%d/%m/%Y", "%d.%m.%Y", "%Y-%m-%d", "%d-%b-%Y", "%d %B %Y"):
+    for fmt in ("%d-%m-%Y", "%d/%m/%Y", "%d.%m.%Y", "%Y-%m-%d", "%d-%b-%Y", "%d %B %Y", "%b %d,%Y", "%b %d, %Y", "%B %d,%Y", "%B %d, %Y"):
         try:
             return datetime.strptime(text, fmt).date()
         except ValueError:
@@ -534,6 +536,162 @@ def process_hdfc_scheme_sheet(
     }
 
 
+def find_icici_main_table_header(sheet: Any) -> tuple[int, int, int, int] | None:
+    """Return header row, instrument column, industry/rating column, and % to NAV column."""
+    for r, row in enumerate(sheet.iter_rows(min_row=1, max_row=min(sheet.max_row, 25), values_only=True), start=1):
+        instrument_col = industry_col = percent_col = None
+        for c, value in enumerate(row):
+            raw = text_value(value).lower().replace(" ", "")
+            key = normalise(value)
+            if "instrument name" in key and ("company" in key or "issuer" in key):
+                instrument_col = c
+            if "industry rating" in key:
+                industry_col = c
+            if "%tonav" in raw:
+                percent_col = c
+        if instrument_col is not None and industry_col is not None and percent_col is not None:
+            return r, instrument_col, industry_col, percent_col
+    return None
+
+
+def extract_icici_scheme_header(sheet: Any) -> tuple[str, date | None]:
+    """Extract scheme title and disclosure date from ICICI's individual-scheme workbook."""
+    scheme_name = ""
+    as_of: date | None = None
+    for row in sheet.iter_rows(min_row=1, max_row=min(sheet.max_row, 12), values_only=True):
+        for value in row:
+            raw = text_value(value)
+            key = normalise(raw)
+            if not scheme_name and key.startswith("icici prudential") and "mutual fund" not in key and "portfolio as on" not in key:
+                scheme_name = raw
+            if as_of is None and "portfolio as on" in key:
+                match = re.search(r"([A-Za-z]{3,9}\s+\d{1,2},\s*\d{4})", raw)
+                if match:
+                    as_of = parse_date(match.group(1))
+        if scheme_name and as_of:
+            break
+    return scheme_name, as_of
+
+
+def process_icici_scheme_sheet(
+    sheet: Any,
+    mapping: dict[str, str],
+    source_file: str,
+    unmapped: dict[str, dict[str, Any]],
+) -> dict[str, Any]:
+    """Process ICICI's single-scheme portfolio. Its % to NAV values are fractions, not percentage points."""
+    scheme_name, as_of = extract_icici_scheme_header(sheet)
+    header = find_icici_main_table_header(sheet)
+    sectors = {sector: 0.0 for sector in STANDARD_SECTORS}
+    holdings_count = 0
+    unmapped_for_scheme: set[str] = set()
+    reported_total_pct: float | None = None
+    in_equity_section = False
+
+    if header is None:
+        return {
+            "amc": "ICICI Prudential Mutual Fund", "scheme_name": scheme_name or source_file,
+            "amc_scheme_code": "", "source_file": source_file, "source_sheet": sheet.title,
+            "as_of_date": as_of.isoformat() if as_of else None,
+            "as_of_month": as_of.strftime("%Y-%m") if as_of else None,
+            "sector_exposure": sectors, "sector_total_pct": 0.0,
+            "reported_grand_total_pct": None, "holdings_count": 0,
+            "unmapped_industries": [], "quality_flags": ["MAIN_HOLDINGS_HEADER_NOT_FOUND"],
+        }
+
+    header_row, instrument_col, industry_col, percent_col = header
+    # ICICI's first sheet has the full portfolio. The separate Derivative sheet is
+    # deliberately excluded; the main table stops at Total Net Assets before futures.
+    for row in sheet.iter_rows(min_row=header_row + 1, max_row=sheet.max_row, values_only=True):
+        instrument = row[instrument_col] if instrument_col < len(row) else None
+        label = text_value(instrument)
+        key = normalise(label)
+        if not label:
+            continue
+
+        raw_pct = parse_number(row[percent_col]) if percent_col < len(row) else None
+        if key == "total net assets" or key.startswith("total net assets "):
+            reported_total_pct = raw_pct * 100 if raw_pct is not None else None
+            break
+        if key.startswith("equity and equity related instruments"):
+            in_equity_section = True
+            continue
+        if key in {"debt instruments", "money market instruments", "others"}:
+            in_equity_section = False
+            # These are sub-total rows; their underlying holdings may follow.
+            continue
+        if key in {
+            "listed awaiting listing on stock exchanges", "unlisted",
+            "securitized debt instruments", "term deposits",
+            "deposits maturity not exceeding 91 days", "deposits placed as margin",
+            "certificate of deposits", "commercial papers", "treasury bills",
+            "units of real estate investment trust reits",
+            "units of an alternative investment fund aif",
+        }:
+            continue
+        if "details of stock future" in key or "details of index future" in key:
+            break
+
+        # Percentage cells are fractions of NAV (e.g. 0.089 means 8.9%).
+        pct = raw_pct * 100 if raw_pct is not None else None
+        if pct is None:
+            continue
+
+        # Blank rows and presentation captions are skipped; Net Current Assets,
+        # TREPS and Cash Margin are actual balance-sheet components and are counted.
+        if key in {"net current assets"}:
+            in_equity_section = False
+        if key == "treps":
+            in_equity_section = False
+        if key == "cash margin derivatives":
+            in_equity_section = False
+
+        holdings_count += 1
+        if not in_equity_section:
+            sectors["Others"] += pct
+            continue
+
+        raw_industry = text_value(row[industry_col]) if industry_col < len(row) else ""
+        mapped_sector = mapping.get(normalise(raw_industry)) if raw_industry else None
+        if mapped_sector:
+            sector = mapped_sector
+        else:
+            sector = "Others"
+            raw_key = raw_industry if raw_industry else "<blank industry>"
+            unmapped_for_scheme.add(raw_key)
+            item = unmapped.setdefault(raw_key, {"occurrences": 0, "schemes": set()})
+            item["occurrences"] += 1
+            item["schemes"].add(scheme_name or source_file)
+        sectors[sector] += pct
+
+    sector_total = sum(sectors.values())
+    flags: list[str] = []
+    if holdings_count == 0:
+        flags.append("MISSING_HOLDINGS_DATA")
+    if as_of is None:
+        flags.append("MISSING_AS_OF_DATE")
+    if sector_total < 95 or sector_total > 101:
+        flags.append("SECTOR_TOTAL_OUTSIDE_95_101")
+    if unmapped_for_scheme:
+        flags.append("UNMAPPED_EQUITY_INDUSTRY")
+
+    return {
+        "amc": "ICICI Prudential Mutual Fund",
+        "scheme_name": scheme_name or source_file,
+        "amc_scheme_code": "",
+        "source_file": source_file,
+        "source_sheet": sheet.title,
+        "as_of_date": as_of.isoformat() if as_of else None,
+        "as_of_month": as_of.strftime("%Y-%m") if as_of else None,
+        "sector_exposure": {sector: (round(value, 4) if abs(value) >= 0.00005 else 0.0) for sector, value in sectors.items()},
+        "sector_total_pct": round(sector_total, 4),
+        "reported_grand_total_pct": round(reported_total_pct, 4) if reported_total_pct is not None else None,
+        "holdings_count": holdings_count,
+        "unmapped_industries": sorted(unmapped_for_scheme),
+        "quality_flags": flags,
+    }
+
+
 def parse_supported_workbook(path: Path, mapping: dict[str, str], unmapped: dict[str, dict[str, Any]]) -> tuple[list[dict[str, Any]], list[str]]:
     workbook = load_workbook(path, read_only=True, data_only=True)
     warnings: list[str] = []
@@ -549,8 +707,25 @@ def parse_supported_workbook(path: Path, mapping: dict[str, str], unmapped: dict
             record = process_hdfc_scheme_sheet(hdfc_sheet, mapping, path.name, unmapped)
             workbook.close()
             return [record], warnings
+
+        # ICICI Prudential also publishes individual-scheme files. The main holdings
+        # table has "Company/Issuer/Instrument Name", "Industry/Rating", and "% to Nav".
+        # Exclude the separate derivatives sheet to avoid counting exposure twice.
+        icici_sheet = next(
+            (
+                sheet for sheet in workbook.worksheets
+                if normalise(sheet.title) not in {"derivative", "derivatives"}
+                and find_icici_main_table_header(sheet)
+            ),
+            None,
+        )
+        if icici_sheet is not None:
+            record = process_icici_scheme_sheet(icici_sheet, mapping, path.name, unmapped)
+            workbook.close()
+            return [record], warnings
+
         workbook.close()
-        return [], [f"Unsupported workbook layout (no Index sheet or recognised HDFC HDFCEQ sheet): {path.name}"]
+        return [], [f"Unsupported workbook layout (no Index sheet or recognised HDFC/ICICI holdings sheet): {path.name}"]
 
     index_entries = build_index_rows(index_sheet)
     if not index_entries:
@@ -745,15 +920,69 @@ def build_outputs(records: list[dict[str, Any]], master_rows: list[dict[str, str
 
 
 def collect_inputs(input_file: Path | None, input_dir: Path | None) -> list[Path]:
+    """Find raw Excel workbooks and ZIP archives containing individual AMC workbooks."""
     if input_file:
         if not input_file.exists():
             raise FileNotFoundError(f"Input file not found: {input_file}")
+        if input_file.suffix.lower() not in {".xlsx", ".xlsm", ".zip"}:
+            raise ValueError("Input must be an .xlsx, .xlsm or .zip file.")
         return [input_file]
     if input_dir is None or not input_dir.exists():
         raise FileNotFoundError(f"Input folder not found: {input_dir}")
-    supported = [p for p in input_dir.rglob("*.xlsx") if p.is_file() and not p.name.startswith("~$")]
-    supported += [p for p in input_dir.rglob("*.xlsm") if p.is_file() and not p.name.startswith("~$")]
+    supported = [
+        p for p in input_dir.rglob("*")
+        if p.is_file() and p.suffix.lower() in {".xlsx", ".xlsm", ".zip"}
+        and not p.name.startswith("~$")
+    ]
     return sorted(set(supported))
+
+
+def expand_zip_inputs(files: list[Path], temp_dir: Path) -> tuple[list[Path], list[str]]:
+    """Extract only Excel workbook members from ZIP archives into a temporary folder."""
+    expanded: list[Path] = []
+    warnings: list[str] = []
+    used_names: set[str] = set()
+    for path in files:
+        if path.suffix.lower() != ".zip":
+            expanded.append(path)
+            used_names.add(path.name.lower())
+            continue
+        try:
+            with zipfile.ZipFile(path) as archive:
+                members = [
+                    info for info in archive.infolist()
+                    if not info.is_dir()
+                    and Path(info.filename).suffix.lower() in {".xlsx", ".xlsm"}
+                    and not Path(info.filename).name.startswith("~$")
+                ]
+                if not members:
+                    warnings.append(f"No .xlsx/.xlsm workbooks found inside ZIP archive: {path.name}")
+                    continue
+                extracted_count = 0
+                for member in members:
+                    basename = Path(member.filename).name
+                    if not basename:
+                        continue
+                    output_name = basename
+                    if output_name.lower() in used_names:
+                        output_name = f"{path.stem}__{basename}"
+                    counter = 2
+                    candidate = output_name
+                    while candidate.lower() in used_names:
+                        stem = Path(output_name).stem
+                        suffix = Path(output_name).suffix
+                        candidate = f"{stem}_{counter}{suffix}"
+                        counter += 1
+                    output_path = temp_dir / candidate
+                    with archive.open(member, "r") as source, output_path.open("wb") as target:
+                        target.write(source.read())
+                    expanded.append(output_path)
+                    used_names.add(candidate.lower())
+                    extracted_count += 1
+                print(f"Expanded {path.name}: {extracted_count} Excel workbooks")
+        except (OSError, zipfile.BadZipFile, RuntimeError) as exc:
+            warnings.append(f"Failed to read ZIP archive {path.name}: {type(exc).__name__}: {exc}")
+    return expanded, warnings
 
 
 def main() -> int:
@@ -770,7 +999,7 @@ def main() -> int:
     input_dir = args.input_dir or (None if args.input else DEFAULT_RAW_DIR)
     files = collect_inputs(args.input, input_dir)
     if not files:
-        print(f"No .xlsx/.xlsm workbooks found. Put monthly files in: {input_dir or DEFAULT_RAW_DIR}", file=sys.stderr)
+        print(f"No .xlsx/.xlsm workbooks or .zip archives found. Put monthly files in: {input_dir or DEFAULT_RAW_DIR}", file=sys.stderr)
         return 2
 
     mapping = read_mapping(args.mapping)
@@ -778,17 +1007,20 @@ def main() -> int:
     all_records: list[dict[str, Any]] = []
     warnings: list[str] = []
     unmapped: dict[str, dict[str, Any]] = {}
-    for path in files:
-        try:
-            records, file_warnings = parse_supported_workbook(path, mapping, unmapped)
-            if not records and not file_warnings:
-                file_warnings = [f"No scheme records found in {path.name}"]
-            all_records.extend(records)
-            warnings.extend(file_warnings)
-            print(f"Processed {path.name}: {len(records)} scheme tabs")
-        except Exception as exc:
-            warnings.append(f"Failed to process {path.name}: {type(exc).__name__}: {exc}")
-            print(f"WARNING: {warnings[-1]}", file=sys.stderr)
+    with tempfile.TemporaryDirectory(prefix="fmmf_amc_inputs_") as temporary_name:
+        expanded_files, archive_warnings = expand_zip_inputs(files, Path(temporary_name))
+        warnings.extend(archive_warnings)
+        for path in expanded_files:
+            try:
+                records, file_warnings = parse_supported_workbook(path, mapping, unmapped)
+                if not records and not file_warnings:
+                    file_warnings = [f"No scheme records found in {path.name}"]
+                all_records.extend(records)
+                warnings.extend(file_warnings)
+                print(f"Processed {path.name}: {len(records)} scheme tabs")
+            except Exception as exc:
+                warnings.append(f"Failed to process {path.name}: {type(exc).__name__}: {exc}")
+                print(f"WARNING: {warnings[-1]}", file=sys.stderr)
 
     if not all_records:
         print("No supported AMC portfolios were parsed. See reports/unsupported_files.csv or the warning above.", file=sys.stderr)
