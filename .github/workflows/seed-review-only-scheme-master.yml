@@ -1,0 +1,60 @@
+name: Seed review-only scheme master (one-time)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  seed-master:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out project files
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Build current AMFI review candidates
+        run: python build_amfi_scheme_candidates.py
+
+      - name: Write candidates to scheme master with publication disabled
+        run: |
+          python - <<'PY'
+          import csv
+          from pathlib import Path
+
+          source = Path("reports/amfi_scheme_candidates.csv")
+          target = Path("config/scheme_master.csv")
+          fields = ["amc", "scheme_name", "amfi_scheme_code", "category", "plan", "option", "include_v1"]
+
+          with source.open("r", encoding="utf-8-sig", newline="") as src, target.open("w", encoding="utf-8-sig", newline="") as dst:
+              reader = csv.DictReader(src)
+              writer = csv.DictWriter(dst, fieldnames=fields, lineterminator="\n")
+              writer.writeheader()
+              count = 0
+              for row in reader:
+                  output = {key: (row.get(key) or "").strip() for key in fields}
+                  output["include_v1"] = "false"
+                  writer.writerow(output)
+                  count += 1
+
+          if count == 0:
+              raise SystemExit("Refusing to replace scheme_master.csv with zero candidates.")
+          print(f"Wrote {count} review-only candidates. Every include_v1 value is false.")
+          PY
+
+      - name: Commit the review-only scheme master
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add config/scheme_master.csv
+          if git diff --cached --quiet; then
+            echo "No scheme-master changes to commit."
+          else
+            git commit -m "Seed review-only AMFI scheme master"
+            git push
+          fi
