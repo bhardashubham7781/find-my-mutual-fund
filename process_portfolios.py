@@ -637,9 +637,15 @@ def process_icici_scheme_sheet(
         if pct is None:
             continue
 
-        # Blank rows and presentation captions are skipped; Net Current Assets,
-        # TREPS and Cash Margin are actual balance-sheet components and are counted.
-        if key in {"net current assets"}:
+        # ICICI reports subtotal/group rows with a blank ISIN or instrument
+        # identifier. Skip them to avoid counting a subtotal and its holdings.
+        # TREPS, Cash Margin and Net Current Assets are actual balance-sheet
+        # components and must be included even though their ISIN cells are blank.
+        isin = text_value(row[2]) if len(row) > 2 else ""
+        if not isin and key not in {"treps", "cash margin derivatives", "net current assets"}:
+            continue
+
+        if key == "net current assets":
             in_equity_section = False
         if key == "treps":
             in_equity_section = False
