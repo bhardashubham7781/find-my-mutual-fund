@@ -10,6 +10,8 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import tempfile
+import zipfile
 from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
@@ -25,13 +27,38 @@ DEFAULT_REPORT = PROJECT_DIR / "reports" / "sector_mapping_audit.csv"
 DEFAULT_SUMMARY = PROJECT_DIR / "reports" / "sector_mapping_audit_summary.json"
 
 
-def collect_workbooks(input_dir: Path) -> list[Path]:
-    return sorted(
+def collect_workbooks(input_dir: Path, temp_dir: Path) -> list[Path]:
+    """Collect loose Excel files and safely expand Excel files from ZIP archives."""
+    paths = [
         p for p in input_dir.rglob("*")
-        if p.is_file()
-        and p.suffix.lower() in {".xlsx", ".xlsm"}
+        if p.is_file() and p.suffix.lower() in {".xlsx", ".xlsm"}
         and not p.name.startswith("~$")
-    )
+    ]
+    used_names = {p.name.lower() for p in paths}
+    for archive_path in sorted(input_dir.rglob("*.zip")):
+        try:
+            with zipfile.ZipFile(archive_path) as archive:
+                for member in archive.infolist():
+                    if member.is_dir():
+                        continue
+                    member_name = Path(member.filename).name
+                    if not member_name or member_name.startswith("~$") or Path(member_name).suffix.lower() not in {".xlsx", ".xlsm"}:
+                        continue
+                    output_name = f"{archive_path.stem}__{member_name}"
+                    index = 2
+                    original = output_name
+                    while output_name.lower() in used_names:
+                        stem, suffix = Path(original).stem, Path(original).suffix
+                        output_name = f"{stem}_{index}{suffix}"
+                        index += 1
+                    output_path = temp_dir / output_name
+                    with archive.open(member, "r") as source, output_path.open("wb") as target:
+                        target.write(source.read())
+                    paths.append(output_path)
+                    used_names.add(output_name.lower())
+        except (OSError, zipfile.BadZipFile, RuntimeError) as exc:
+            print(f"WARNING: Could not read {archive_path.name}: {type(exc).__name__}: {exc}")
+    return sorted(paths)
 
 
 def add_usage(usage: dict[str, dict[str, Any]], label: str, scheme: str, mapped_sector: str | None) -> None:
@@ -139,6 +166,65 @@ def audit_hdfc_workbook(workbook: Any, mapping: dict[str, str], usage: dict[str,
     return 1, []
 
 
+def audit_icici_workbook(workbook: Any, mapping: dict[str, str], usage: dict[str, dict[str, Any]], source_file: str) -> tuple[int, list[str]]:
+    """Audit industry labels from an ICICI individual-scheme workbook."""
+    sheet = next(
+        (s for s in workbook.worksheets
+         if processor.normalise(s.title) not in {"derivative", "derivatives"}
+         and processor.find_icici_main_table_header(s)),
+        None,
+    )
+    if sheet is None:
+        return 0, [f"{source_file}: ICICI holdings header not recognised"]
+    header = processor.find_icici_main_table_header(sheet)
+    if not header:
+        return 0, [f"{source_file}: ICICI holdings header not recognised"]
+    header_row, instrument_col, industry_col, percent_col = header
+    scheme_name, _ = processor.extract_icici_scheme_header(sheet)
+    scheme_name = scheme_name or source_file
+    in_equity = False
+
+    skip_labels = {
+        "listed awaiting listing on stock exchanges", "unlisted",
+        "securitized debt instruments", "term deposits",
+        "deposits maturity not exceeding 91 days", "deposits placed as margin",
+        "certificate of deposits", "commercial papers", "treasury bills",
+        "units of real estate investment trust reits",
+        "units of an alternative investment fund aif",
+    }
+
+    for row in sheet.iter_rows(min_row=header_row + 1, max_row=sheet.max_row, values_only=True):
+        instrument = processor.text_value(row[instrument_col]) if instrument_col < len(row) else ""
+        if not instrument:
+            continue
+        key = processor.normalise(instrument)
+        raw_pct = processor.parse_number(row[percent_col]) if percent_col < len(row) else None
+        if key == "total net assets" or key.startswith("total net assets "):
+            break
+        if key.startswith("equity and equity related instruments"):
+            in_equity = True
+            continue
+        if key in {"debt instruments", "money market instruments", "others"}:
+            in_equity = False
+            continue
+        if key in skip_labels or "details of stock future" in key or "details of index future" in key:
+            continue
+        if raw_pct is None:
+            continue
+        isin = processor.text_value(row[2]) if len(row) > 2 else ""
+        if not isin and key not in {"treps", "cash margin derivatives", "net current assets"}:
+            continue
+        if key in {"treps", "cash margin derivatives", "net current assets"}:
+            in_equity = False
+        if not in_equity:
+            continue
+
+        raw_industry = processor.text_value(row[industry_col]) if industry_col < len(row) else ""
+        mapped = mapping.get(processor.normalise(raw_industry)) if raw_industry else None
+        add_usage(usage, raw_industry, scheme_name, mapped)
+    return 1, []
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Build a review-only audit of industry-to-sector mappings used in raw AMC workbooks.")
     parser.add_argument("--input-dir", type=Path, default=DEFAULT_RAW_DIR)
@@ -156,25 +242,28 @@ def main() -> int:
     workbook_count = 0
     source_schemes = 0
 
-    paths = collect_workbooks(args.input_dir)
-    if not paths:
-        print(f"ERROR: no .xlsx/.xlsm files in {args.input_dir}")
-        return 2
+    with tempfile.TemporaryDirectory(prefix="fmmf_mapping_audit_") as temp_name:
+        paths = collect_workbooks(args.input_dir, Path(temp_name))
+        if not paths:
+            print(f"ERROR: no .xlsx/.xlsm files or ZIP archives containing Excel workbooks in {args.input_dir}")
+            return 2
 
-    for path in paths:
-        workbook = load_workbook(path, read_only=True, data_only=True)
-        try:
-            if processor.find_index_sheet(workbook) is not None:
-                processed, current_warnings = audit_sbi_workbook(workbook, mapping, usage, path.name)
-            elif any(processor.normalise(s.title) == "hdfceq" for s in workbook.worksheets):
-                processed, current_warnings = audit_hdfc_workbook(workbook, mapping, usage, path.name)
-            else:
-                processed, current_warnings = 0, [f"{path.name}: unsupported layout for sector mapping audit"]
-            workbook_count += 1 if processed else 0
-            source_schemes += processed
-            warnings.extend(current_warnings)
-        finally:
-            workbook.close()
+        for path in paths:
+            workbook = load_workbook(path, read_only=True, data_only=True)
+            try:
+                if processor.find_index_sheet(workbook) is not None:
+                    processed, current_warnings = audit_sbi_workbook(workbook, mapping, usage, path.name)
+                elif any(processor.normalise(s.title) == "hdfceq" for s in workbook.worksheets):
+                    processed, current_warnings = audit_hdfc_workbook(workbook, mapping, usage, path.name)
+                elif any(processor.find_icici_main_table_header(sheet) for sheet in workbook.worksheets):
+                    processed, current_warnings = audit_icici_workbook(workbook, mapping, usage, path.name)
+                else:
+                    processed, current_warnings = 0, [f"{path.name}: unsupported layout for sector mapping audit"]
+                workbook_count += 1 if processed else 0
+                source_schemes += processed
+                warnings.extend(current_warnings)
+            finally:
+                workbook.close()
 
     configured = {processor.normalise(row["source_industry"]): row for row in raw_rows}
     keys = set(configured) | set(usage)
