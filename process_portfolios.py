@@ -62,10 +62,20 @@ def normalise(value: Any) -> str:
 
 
 def canonical_scheme_name(value: Any) -> str:
-    """Remove common plan/option suffixes to match a portfolio to its AMFI scheme."""
+    """Normalise common scheme-name variants and remove plan/option suffixes."""
     text = normalise(value)
+    # AMCs and AMFI sometimes join the same category words differently:
+    # e.g. "Smallcap" in a portfolio workbook vs "Small Cap" in the AMFI feed.
+    for joined, spaced in [
+        ("smallcap", "small cap"),
+        ("midcap", "mid cap"),
+        ("largecap", "large cap"),
+        ("flexicap", "flexi cap"),
+        ("multicap", "multi cap"),
+    ]:
+        text = re.sub(r"\\b" + joined + r"\\b", spaced, text)
     # Remove plan labels wherever they occur; then remove common trailing options.
-    text = re.sub(r"\b(direct plan|regular plan|institutional plan)\b", " ", text)
+    text = re.sub(r"\\b(direct plan|regular plan|institutional plan)\\b", " ", text)
     suffixes = [
         "growth option", "growth", "idcw payout", "idcw reinvestment", "idcw",
         "dividend payout", "dividend reinvestment", "dividend option", "dividend",
