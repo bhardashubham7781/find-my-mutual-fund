@@ -65,7 +65,10 @@ def normalise(value: Any) -> str:
 
 def canonical_scheme_name(value: Any) -> str:
     """Normalise common scheme-name variants and remove plan/option suffixes."""
-    text = normalise(value)
+    raw_text = text_value(value)
+    # Some AMFI names retain a legacy scheme name in parentheses after a merger/rename.
+    raw_text = re.sub(r"\s*\(erstwhile\s+[^)]*\)", "", raw_text, flags=re.IGNORECASE)
+    text = normalise(raw_text)
     # AMCs and AMFI sometimes join the same category words differently:
     # e.g. "Smallcap" in a portfolio workbook vs "Small Cap" in the AMFI feed.
     for joined, spaced in [
