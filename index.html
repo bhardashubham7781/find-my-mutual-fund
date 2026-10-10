@@ -33,6 +33,63 @@
     .seo-guide a{color:#1c56a7;text-underline-offset:3px}
     .guide-link{font-size:12px;color:#c6d5e9;text-decoration:underline;text-underline-offset:3px}
 
+  
+    /* Brighter visual system */
+    :root{--ink:#171b3a;--muted:#62698b;--line:#e0e4fb;--paper:#f7f7ff;--white:#fff;--navy:#29245f;--navy2:#4136a4;--green:#078b83;--greenbg:#e5fbf7;--blue:#5850ec;--shadow:0 12px 35px rgba(64,58,150,.09)}
+    .top{background:linear-gradient(120deg,#272160 0%,#5542d5 56%,#168caa 100%)}
+    .hero{background:transparent}
+    .hero .eyebrow{color:#8ef4e0}
+    .brand-mark{background:linear-gradient(135deg,#ffdc7d,#ff9fba);color:#272160}
+    .pill{background:rgba(255,255,255,.08);border-color:rgba(220,227,255,.35)}
+    .hero-note{border:1px solid rgba(255,255,255,.28);background:linear-gradient(145deg,rgba(255,255,255,.16),rgba(255,255,255,.06));box-shadow:0 16px 38px rgba(22,18,69,.16)}
+    .btn-primary{background:linear-gradient(100deg,#6055f2,#278dbd);border-color:#5850ec;color:#fff;box-shadow:0 6px 16px rgba(88,80,236,.18)}
+    .btn-primary:hover{background:linear-gradient(100deg,#4c42df,#137ca9)}
+    .btn-soft{background:linear-gradient(100deg,#f3efff,#e8fffa);border-color:#d8d5ff;color:#342c88}
+    .panel,.seo-guide{border-color:#e0e1fa;box-shadow:0 14px 32px rgba(58,51,140,.07)}
+    .panel-head{background:linear-gradient(100deg,#fcfbff,#f4faff)}
+    .small-label{color:#5b54bc}
+    .score .num{color:#078b83}
+    .mini-badge{background:#f5f6ff;border-color:#e0e4fb}
+    .matchbar>span{background:linear-gradient(90deg,#4ed6bf,#5e75f6,#ffb454)}
+    .method-card .icon{background:linear-gradient(135deg,#d7fff7,#e6e4ff);color:#4236b2}
+    .quiz-panel,.allocation-panel{background:#fff;border:1px solid #e0e1fa;border-radius:18px;box-shadow:0 14px 32px rgba(58,51,140,.08);margin:22px 0 28px;overflow:hidden}
+    .quiz-head,.allocation-head{padding:22px 24px;background:linear-gradient(110deg,#272160,#5542d5 65%,#168caa);color:#fff}
+    .quiz-head h2,.allocation-head h2{font-size:21px;margin:0 0 5px}
+    .quiz-head p,.allocation-head p{margin:0;color:#e7eaff;font-size:13px;max-width:820px}
+    .step-pill{display:inline-block;background:#ffdc7d;color:#34245f;border-radius:999px;padding:5px 9px;font-size:10px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
+    .quiz-body,.allocation-body{padding:22px 24px}
+    .quiz-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+    .quiz-question{border:1px solid #e3e6fb;border-radius:13px;padding:15px;background:linear-gradient(140deg,#fff,#fafaff);min-width:0}
+    .quiz-question legend,.quiz-question .q-title{font-size:13px;font-weight:850;color:#27245e;margin:0 0 10px;padding:0}
+    .quiz-question fieldset{border:0;margin:0;padding:0}
+    .quiz-option{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:#414968;margin:9px 0;cursor:pointer;line-height:1.45}
+    .quiz-option input{margin-top:2px;accent-color:#5850ec;flex-shrink:0}
+    .quiz-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:18px}
+    .quiz-result{display:none;border:1px solid #9de7dd;background:linear-gradient(105deg,#e6fff9,#f0efff);border-radius:13px;padding:15px 17px;margin-top:16px}
+    .quiz-result.visible{display:block}
+    .quiz-result strong{color:#1e347e}
+    .quiz-result p{margin:5px 0 0;font-size:12px;color:#4e5678}
+    .quiz-error{font-size:12px;color:#bd3154;font-weight:750}
+    .allocation-controls{display:grid;grid-template-columns:minmax(180px,.7fr) minmax(220px,1.3fr);gap:14px;align-items:end}
+    .allocation-field label{display:block;font-size:11px;font-weight:850;text-transform:uppercase;letter-spacing:.08em;color:#5f6486;margin-bottom:6px}
+    .allocation-field input{width:100%;border:1px solid #cdd2f6;border-radius:10px;padding:12px;background:#fff;color:#1d2144}
+    .allocation-field input:focus{outline:2px solid #aaa4ff;border-color:#6258ef}
+    .selection-count{padding:12px;border-radius:10px;background:#f4f3ff;color:#4840b3;font-size:12px;font-weight:750}
+    .allocation-note{font-size:12px;color:#646987;line-height:1.65;margin:14px 0}
+    .allocation-status{font-size:12px;font-weight:750;margin:12px 0;color:#4c4e75}
+    .allocation-table-wrap{overflow-x:auto;margin-top:18px}
+    .allocation-table{width:100%;border-collapse:collapse;min-width:630px}
+    .allocation-table th,.allocation-table td{padding:12px 10px;border-bottom:1px solid #e6e8fa;text-align:left;font-size:12px;vertical-align:middle}
+    .allocation-table th{background:#f5f4ff;color:#565b83;text-transform:uppercase;font-size:10px;letter-spacing:.07em}
+    .allocation-table td input{width:82px;border:1px solid #d7d9f4;border-radius:8px;padding:7px 8px}
+    .allocation-total{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;background:linear-gradient(100deg,#e7fff8,#f1efff);border-radius:11px;padding:14px;margin-top:14px;color:#302a7b;font-weight:850}
+    .allocation-total .sub{font-size:11px;color:#5f6486;font-weight:600}
+    .card-select{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;color:#4239b2;border:1px solid #dad7ff;background:#f5f3ff;border-radius:8px;padding:7px 9px;cursor:pointer}
+    .card-select input{accent-color:#5850ec}
+    .risk-tag{display:inline-block;background:#fff0d2;color:#845a04;border-radius:6px;padding:3px 6px;font-size:10px;font-weight:800}
+    .btn-outline{border:1px solid #cac8ff;color:#463bb3;background:#fff}
+    @media(max-width:700px){.quiz-grid{grid-template-columns:1fr}.allocation-controls{grid-template-columns:1fr}.quiz-head,.allocation-head{padding:19px}.quiz-body,.allocation-body{padding:16px}.hero-note{border-radius:15px}}
+
   </style>
   <script type="application/ld+json">
   {
@@ -81,6 +138,54 @@
       <div><strong>Loading portfolio data</strong>Checking for the current published dataset.</div>
     </div>
 
+    <section class="quiz-panel" aria-labelledby="quizHeading">
+      <div class="quiz-head">
+        <span class="step-pill">Step 1 · Investor profile</span>
+        <h2 id="quizHeading">How do you behave when markets move?</h2>
+        <p>Answer four questions to generate a transparent, editable starting profile before splitting money across the funds you select.</p>
+      </div>
+      <div class="quiz-body">
+        <form id="investorQuizForm">
+          <div class="quiz-grid">
+            <fieldset class="quiz-question">
+              <legend>1. When might you need this money?</legend>
+              <label class="quiz-option"><input type="radio" name="horizon" value="0" required> Within 3 years</label>
+              <label class="quiz-option"><input type="radio" name="horizon" value="1"> In 3–5 years</label>
+              <label class="quiz-option"><input type="radio" name="horizon" value="2"> In 5–7 years</label>
+              <label class="quiz-option"><input type="radio" name="horizon" value="3"> In 7+ years</label>
+            </fieldset>
+            <fieldset class="quiz-question">
+              <legend>2. If your portfolio fell 20%, what would you most likely do?</legend>
+              <label class="quiz-option"><input type="radio" name="reaction" value="0" required> Sell most or all investments</label>
+              <label class="quiz-option"><input type="radio" name="reaction" value="1"> Reduce risk and move part to safer assets</label>
+              <label class="quiz-option"><input type="radio" name="reaction" value="2"> Stay invested and wait</label>
+              <label class="quiz-option"><input type="radio" name="reaction" value="3"> Continue investing or add gradually</label>
+            </fieldset>
+            <fieldset class="quiz-question">
+              <legend>3. Which temporary fall could you realistically tolerate?</legend>
+              <label class="quiz-option"><input type="radio" name="drawdown" value="0" required> Less than 5%</label>
+              <label class="quiz-option"><input type="radio" name="drawdown" value="1"> 5–10%</label>
+              <label class="quiz-option"><input type="radio" name="drawdown" value="2"> 10–20%</label>
+              <label class="quiz-option"><input type="radio" name="drawdown" value="3"> More than 20%</label>
+            </fieldset>
+            <fieldset class="quiz-question">
+              <legend>4. Which outcome best describes your priority?</legend>
+              <label class="quiz-option"><input type="radio" name="priority" value="0" required> Preserve capital and limit fluctuations</label>
+              <label class="quiz-option"><input type="radio" name="priority" value="1"> Favour stability over high growth</label>
+              <label class="quiz-option"><input type="radio" name="priority" value="2"> Balance growth with risk</label>
+              <label class="quiz-option"><input type="radio" name="priority" value="3"> Pursue long-term growth despite volatility</label>
+            </fieldset>
+          </div>
+          <div class="quiz-actions">
+            <button class="btn btn-primary" type="submit">Calculate my profile ↓</button>
+            <button class="btn btn-outline" type="reset" id="resetQuiz">Reset answers</button>
+            <span id="quizError" class="quiz-error" role="alert"></span>
+          </div>
+        </form>
+        <div class="quiz-result" id="quizResult" aria-live="polite"></div>
+      </div>
+    </section>
+
     <div class="section-head">
       <div><h2>Build your exposure rules</h2><p>Choose a rule for any sector. Leave the rest as “No preference”.</p></div>
       <button class="btn" id="resetRules" type="button">Reset rules</button>
@@ -116,6 +221,31 @@
         <div class="fund-list" id="fundResults" aria-live="polite"></div>
       </section>
     </div>
+
+
+    <section class="allocation-panel" aria-labelledby="allocationHeading">
+      <div class="allocation-head">
+        <span class="step-pill">Step 3 · Portfolio planner</span>
+        <h2 id="allocationHeading">Split an amount across the funds you choose</h2>
+        <p>Select multiple funds below. The planner uses your profile, your sector rules and broad category-level risk assumptions to create editable percentage weights.</p>
+      </div>
+      <div class="allocation-body">
+        <div class="allocation-controls">
+          <div class="allocation-field">
+            <label for="investmentAmount">Total investment amount (₹)</label>
+            <input id="investmentAmount" type="number" min="1" step="100" value="100000" inputmode="decimal">
+          </div>
+          <div class="selection-count" id="selectedFundCount">0 funds selected · Use “Add to allocation” on any fund card.</div>
+        </div>
+        <p class="allocation-note">Allocation weights are an educational calculation, not a personalised investment recommendation. The current dataset does not contain verified fund returns, volatility, or each scheme’s official risk-o-meter. Category risk is only a rough proxy; sector preference fit uses the rules you set above. The tool cannot make a group of selected high-risk funds low-risk.</p>
+        <div class="quiz-actions">
+          <button class="btn btn-primary" type="button" id="generateAllocation">Generate editable allocation</button>
+          <button class="btn btn-outline" type="button" id="clearAllocation">Clear selected funds</button>
+        </div>
+        <div class="allocation-status" id="allocationStatus" role="status">Complete the investor profile quiz and select at least two funds to begin.</div>
+        <div id="allocationOutput"></div>
+      </div>
+    </section>
 
     <div class="section-head"><div><h2>Designed for transparent comparisons</h2><p>Sector exposure is one lens on a portfolio—not a prediction of future returns.</p></div></div>
     <section class="method" aria-label="How the screener works">
