@@ -1,0 +1,49 @@
+name: Review SBI portfolio against AMFI schemes
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  review-sbi:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out project files
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Install Excel-reading library
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+
+      - name: Download current AMFI scheme candidates for review
+        run: python build_amfi_scheme_candidates.py
+
+      - name: Match SBI portfolio tabs to AMFI candidates and build quality reports
+        run: |
+          python process_portfolios.py \
+            --input-dir data/raw \
+            --scheme-master reports/amfi_scheme_candidates.csv \
+            --data-out data/review_processed \
+            --reports-out reports/sbi_amfi_review
+
+      - name: Save SBI-to-AMFI review bundle
+        uses: actions/upload-artifact@v6
+        with:
+          name: sbi-amfi-match-review
+          path: |
+            reports/amfi_scheme_candidates.csv
+            reports/amfi_scheme_candidates_summary.json
+            data/review_processed/funds.json
+            reports/sbi_amfi_review/data_quality.csv
+            reports/sbi_amfi_review/data_quality_summary.json
+            reports/sbi_amfi_review/unmapped_industries.csv
+            reports/sbi_amfi_review/unsupported_files.csv
+          if-no-files-found: error
