@@ -73,7 +73,7 @@ def canonical_scheme_name(value: Any) -> str:
         ("flexicap", "flexi cap"),
         ("multicap", "multi cap"),
     ]:
-        text = re.sub(r"\\b" + joined + r"\\b", spaced, text)
+        text = re.sub(r"\b" + joined + r"\b", spaced, text)
     # Remove plan labels wherever they occur; then remove common trailing options.
     text = re.sub(r"\\b(direct plan|regular plan|institutional plan)\\b", " ", text)
     suffixes = [
