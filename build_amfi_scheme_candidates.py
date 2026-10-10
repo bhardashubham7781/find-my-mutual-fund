@@ -99,17 +99,21 @@ def user_category(section: str, scheme_name: str) -> str | None:
             return "PSU"
         return "Sectoral/Thematic"
 
-    # AMFI places index schemes under a separate "Index Funds" grouping; do not
-    # assume every such index is equity because debt index funds can appear there.
+    # Explicit AMFI debt-index sections are outside this equity-only screener.
+    # "Other Scheme - Index Funds" can also contain debt index funds, so check
+    # both the official section and the scheme name before allowing a candidate.
     if "index fund" in s:
+        if "debt funds" in s or "debt index" in s:
+            return None
         equity_index_markers = (
             "nifty", "sensex", "bse", "nse", "s and p 500", "sp 500",
             "msci", "nasdaq", "dow jones", "ftse", "hang seng",
         )
         debt_markers = (
-            "g sec", "gsec", "government bond", "bond index", "debt index",
-            "target maturity", "constant maturity", "money market", "liquid",
-            "overnight", "corporate bond", "gilt", "treasury",
+            "sdl", "bond", "g sec", "gsec", "government securities",
+            "government bond", "debt index", "target maturity", "constant maturity",
+            "money market", "liquid", "overnight", "corporate bond", "gilt",
+            "treasury", "psu bond", "aaa", "cpse", "maturity",
         )
         if any(marker in n for marker in debt_markers):
             return None
