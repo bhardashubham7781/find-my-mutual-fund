@@ -1,0 +1,45 @@
+name: Test SBI portfolio processor
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "data/raw/**"
+      - "config/**"
+      - "process_portfolios.py"
+      - "requirements.txt"
+
+permissions:
+  contents: read
+
+jobs:
+  process-sbi:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out project files
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Excel-reading library
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+
+      - name: Process AMC spreadsheets and run data-quality checks
+        run: python process_portfolios.py --input-dir data/raw
+
+      - name: Save test output for review
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbi-processor-test-results
+          path: |
+            data/processed/funds.json
+            reports/data_quality.csv
+            reports/data_quality_summary.json
+            reports/unmapped_industries.csv
+            reports/unsupported_files.csv
+          if-no-files-found: error
