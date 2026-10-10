@@ -4,13 +4,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0b1930">
-  <title>Find My Mutual Fund | Search by Sector Exposure</title>
+  <title>Indian Mutual Fund Sector Exposure Screener | Find My Mutual Fund</title>
   <link rel="canonical" href="https://bhardashubham7781.github.io/find-my-mutual-fund/">
   <meta name="robots" content="index,follow,max-image-preview:large">
-  <meta name="description" content="Explore Indian mutual funds by sector exposure. Set rules for IT, banking, healthcare and other sectors, then compare funds by how closely their disclosed holdings match your rules.">
+  <meta name="description" content="Find Indian mutual funds by sector exposure. Compare disclosed allocations across IT, banking, pharma, auto, FMCG and more with this free mutual fund sector screener.">
   <meta property="og:url" content="https://bhardashubham7781.github.io/find-my-mutual-fund/">
-  <meta property="og:title" content="Find My Mutual Fund">
-  <meta property="og:description" content="Search Indian mutual funds by sector exposure, with transparent data dates and rule-by-rule comparisons.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Indian Mutual Fund Sector Exposure Screener | Find My Mutual Fund">
+  <meta property="og:description" content="Find and compare Indian mutual funds by disclosed sector allocation, including IT, banking, healthcare, auto and more.">
+  <meta name="twitter:card" content="summary">
   <style>
     :root{--ink:#152238;--muted:#617087;--line:#dfe6ee;--paper:#f6f8fb;--white:#fff;--navy:#0b1930;--navy2:#172b49;--green:#087f68;--greenbg:#e7f6f1;--amber:#8a5a00;--amberbg:#fff5df;--blue:#315fcb;--shadow:0 12px 35px rgba(19,38,67,.06)}
     *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.5}button,input,select{font:inherit}button{cursor:pointer}a{color:inherit}
@@ -21,13 +23,41 @@
     .method{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:22px 0 36px}.method-card{border:1px solid var(--line);background:#fff;border-radius:13px;padding:17px}.method-card .icon{height:30px;width:30px;display:grid;place-items:center;background:#e8f5f1;color:var(--green);border-radius:9px;font-weight:900}.method-card h3{font-size:13px;margin:11px 0 5px}.method-card p{font-size:11px;color:var(--muted);margin:0}.bottom-disclaimer{background:#eaf0f6;border-top:1px solid #dbe3ed}.footer-inner{max-width:1200px;margin:auto;padding:23px 24px;display:flex;justify-content:space-between;gap:18px;align-items:flex-start}.footer-inner p{font-size:11px;color:#536278;margin:0;max-width:820px}.footer-brand{font-size:11px;font-weight:900;letter-spacing:.07em;color:#253651;white-space:nowrap}.hidden{display:none!important}
     @media(max-width:900px){.hero{grid-template-columns:1fr;gap:25px;padding-top:36px}.hero-note{max-width:560px}.layout{grid-template-columns:1fr}.method{grid-template-columns:1fr 1fr}.wrap{padding:18px}.section-head{margin-top:24px}}
     @media(max-width:520px){.nav{padding:16px}.nav-tag{display:none}.hero{padding:30px 16px 34px}.hero h1{font-size:38px}.hero p{font-size:15px}.wrap{padding:13px}.panel-head,.panel-body{padding-left:15px;padding-right:15px}.sector-row{grid-template-columns:minmax(100px,.8fr) minmax(0,1.2fr);gap:8px}.sector-control{gap:4px}.sector-control select{padding:8px 5px;font-size:11px}.sector-control input{max-width:60px;padding:8px 5px}.filters{padding-left:14px;padding-right:14px}.searchbox{padding-left:14px;padding-right:14px}.results-toolbar{padding-left:14px;padding-right:14px}.fund-list{padding:0 12px}.detail-grid{grid-template-columns:1fr}.method{grid-template-columns:1fr}.footer-inner{padding:18px 16px;display:block}.footer-brand{margin-top:10px}.fund-top{gap:8px}.score{min-width:78px}.score .num{font-size:18px}}
+  
+    .seo-guide{margin:30px 0 36px;padding:28px;border:1px solid var(--line);background:#fff;border-radius:16px}
+    .seo-guide h2{font-size:22px;margin:0 0 12px;color:var(--ink)}
+    .seo-guide h3{font-size:16px;margin:22px 0 7px;color:var(--ink)}
+    .seo-guide p,.seo-guide li{font-size:14px;color:#43536a;line-height:1.75}
+    .seo-guide p{margin:8px 0}
+    .seo-guide ul{padding-left:22px;margin:8px 0}
+    .seo-guide a{color:#1c56a7;text-underline-offset:3px}
+    .guide-link{font-size:12px;color:#c6d5e9;text-decoration:underline;text-underline-offset:3px}
+
   </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Find My Mutual Fund",
+    "url": "https://bhardashubham7781.github.io/find-my-mutual-fund/",
+    "description": "A free Indian mutual fund sector exposure screener for comparing disclosed sector allocations using user-defined rules.",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Any",
+    "isAccessibleForFree": true,
+    "featureList": [
+      "Compare mutual funds by disclosed sector exposure",
+      "Set minimum and maximum rules for sectors",
+      "Screen for low or zero IT exposure",
+      "Review fund-level sector allocation breakdowns"
+    ]
+  }
+  </script>
 </head>
 <body>
   <header class="top">
     <nav class="nav" aria-label="Main navigation">
       <a class="brand" href="./" aria-label="Find My Mutual Fund home"><span class="brand-mark">FM</span><span>FIND MY MUTUAL FUND</span></a>
-      <span class="nav-tag">A clearer view of portfolio exposure</span>
+      <span class="nav-tag"><a class="guide-link" href="guides/compare-mutual-funds-by-sector-exposure.html">Sector exposure guide</a></span>
     </nav>
     <section class="hero">
       <div>
