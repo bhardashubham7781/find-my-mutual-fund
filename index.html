@@ -44,8 +44,8 @@
 
   <main class="wrap">
     <div class="demo-banner" id="dataStatus" role="status" aria-live="polite">
-      <span class="symbol">ⓘ</span>
-      <div><strong>Preview mode — illustrative sample data</strong>These example funds and percentages are fictional and are only here to demonstrate the screener. They are not actual mutual fund schemes or investment information.</div>
+      <span class="symbol">…</span>
+      <div><strong>Loading portfolio data</strong>Checking for the current published dataset.</div>
     </div>
 
     <div class="section-head">
@@ -216,8 +216,7 @@
         if(!eligible.length)throw new Error("No schemes verified for version 1 yet");
         funds=eligible;isDemo=false;
         const banner=document.getElementById("dataStatus");
-        banner.innerHTML='<span class="symbol">✓</span><div><strong>Portfolio disclosure data loaded</strong>Results are limited to schemes explicitly marked eligible in the verified scheme master. Check each fund’s disclosure month and quality flags.</div>';
-        banner.style.background="var(--greenbg)";banner.style.borderColor="#b7e5d8";banner.style.color="#075f50";
+        banner.innerHTML='<span class="symbol">β</span><div><strong>Public beta — limited portfolio coverage</strong>Currently includes scheme-matched September 2026 disclosures from SBI, HDFC and ICICI Prudential only. Some source industry labels are grouped under “Others”. Confirm allocations against the AMC factsheet. Data may be delayed; this is not investment advice.</div>';
       }catch(e){
         funds=demoFunds;isDemo=true;
         document.getElementById("dataStatus").innerHTML='<span class="symbol">ⓘ</span><div><strong>Preview mode — illustrative sample data</strong>Real published results are not available yet. These example funds and percentages are fictional, solely for testing the interface, and are not actual mutual fund schemes or investment information.</div>';
