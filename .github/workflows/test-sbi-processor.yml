@@ -1,4 +1,4 @@
-name: Test SBI portfolio processor
+name: Test monthly portfolio processor
 
 on:
   workflow_dispatch:
@@ -32,10 +32,10 @@ jobs:
       - name: Process AMC spreadsheets and run data-quality checks
         run: python process_portfolios.py --input-dir data/raw
 
-      - name: Save test output for review
+      - name: Save processor output for review
         uses: actions/upload-artifact@v6
         with:
-          name: sbi-processor-test-results
+          name: portfolio-processor-test-results
           path: |
             data/processed/funds.json
             reports/data_quality.csv
