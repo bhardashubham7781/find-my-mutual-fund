@@ -395,13 +395,169 @@ def process_scheme_sheet(
     }
 
 
+def find_hdfc_main_table_header(sheet: Any) -> tuple[int, int, int, int] | None:
+    """Find HDFC's individual-scheme holdings header: instrument, industry and % to NAV."""
+    for r, row in enumerate(sheet.iter_rows(min_row=1, max_row=min(sheet.max_row, 40), values_only=True), start=1):
+        instrument_col = industry_col = percent_col = None
+        for c, value in enumerate(row):
+            raw = text_value(value).lower()
+            key = normalise(value)
+            if "name of the instrument" in key:
+                instrument_col = c
+            if "industry" in key:
+                industry_col = c
+            if "% to nav" in raw or key == "to nav":
+                percent_col = c
+        if instrument_col is not None and industry_col is not None and percent_col is not None:
+            return r, instrument_col, industry_col, percent_col
+    return None
+
+
+def extract_hdfc_scheme_header(sheet: Any) -> tuple[str, date | None]:
+    """Read the scheme name and 'Portfolio as on ...' date from an HDFC portfolio sheet."""
+    title = text_value(sheet.cell(1, 1).value)
+    # HDFC puts the scheme name followed by a parenthetical scheme description in row 1.
+    scheme_name = re.sub(r"\s*\(.*$", "", title).strip()
+    as_of: date | None = None
+    for row in sheet.iter_rows(min_row=1, max_row=min(sheet.max_row, 8), values_only=True):
+        for value in row:
+            text = text_value(value)
+            match = re.search(r"\b\d{1,2}-[A-Za-z]{3}-\d{4}\b", text)
+            if match:
+                parsed = parse_date(match.group(0), sheet.parent.epoch)
+                if parsed:
+                    as_of = parsed
+                    break
+        if as_of:
+            break
+    return scheme_name, as_of
+
+
+def process_hdfc_scheme_sheet(
+    sheet: Any,
+    mapping: dict[str, str],
+    source_file: str,
+    unmapped: dict[str, dict[str, Any]],
+) -> dict[str, Any]:
+    """Process one HDFC monthly portfolio workbook's HDFCEQ sheet."""
+    scheme_name, as_of = extract_hdfc_scheme_header(sheet)
+    header = find_hdfc_main_table_header(sheet)
+    sectors = {sector: 0.0 for sector in STANDARD_SECTORS}
+    holdings_count = 0
+    unmapped_for_scheme: set[str] = set()
+    reported_total_pct: float | None = None
+    in_equity_section = False
+
+    if header is None:
+        flags = ["MAIN_HOLDINGS_HEADER_NOT_FOUND"]
+        return {
+            "amc": "HDFC Mutual Fund", "scheme_name": scheme_name or source_file,
+            "amc_scheme_code": "", "source_file": source_file, "source_sheet": sheet.title,
+            "as_of_date": as_of.isoformat() if as_of else None,
+            "as_of_month": as_of.strftime("%Y-%m") if as_of else None,
+            "sector_exposure": sectors, "sector_total_pct": 0.0,
+            "reported_grand_total_pct": None, "holdings_count": 0,
+            "unmapped_industries": [], "quality_flags": flags,
+        }
+
+    header_row, instrument_col, industry_col, percent_col = header
+    for row in sheet.iter_rows(min_row=header_row + 1, max_row=sheet.max_row, values_only=True):
+        # HDFC section captions and totals are generally in column B, unlike its
+        # holding descriptions which are in the "Name Of the Instrument" column.
+        labels = [normalise(v) for v in row[:max(5, instrument_col + 1)] if text_value(v)]
+        joined_labels = " ".join(labels)
+
+        if any(label == "grand total" for label in labels):
+            reported_total_pct = parse_number(row[percent_col]) if percent_col < len(row) else None
+            break
+        if any(label == "equity and equity related" or label.startswith("equity and equity related ") for label in labels):
+            in_equity_section = True
+            continue
+        if any(
+            label == "debt instruments"
+            or label == "money market instruments"
+            or label == "others"
+            for label in labels
+        ):
+            in_equity_section = False
+            continue
+        if any(label in {"sub total", "total"} for label in labels):
+            continue
+
+        instrument = row[instrument_col] if instrument_col < len(row) else None
+        label = text_value(instrument)
+        if not label:
+            continue
+        pct = parse_number(row[percent_col]) if percent_col < len(row) else None
+        if pct is None:
+            continue
+
+        holdings_count += 1
+        if not in_equity_section:
+            # Bonds, money-market instruments and net current assets are counted in
+            # Others so the sector breakdown reconciles to the portfolio's % of NAV.
+            sectors["Others"] += pct
+            continue
+
+        raw_industry = text_value(row[industry_col]) if industry_col < len(row) else ""
+        mapped_sector = mapping.get(normalise(raw_industry)) if raw_industry else None
+        if mapped_sector:
+            sector = mapped_sector
+        else:
+            sector = "Others"
+            raw_key = raw_industry if raw_industry else "<blank industry>"
+            unmapped_for_scheme.add(raw_key)
+            item = unmapped.setdefault(raw_key, {"occurrences": 0, "schemes": set()})
+            item["occurrences"] += 1
+            item["schemes"].add(scheme_name or source_file)
+        sectors[sector] += pct
+
+    sector_total = sum(sectors.values())
+    flags: list[str] = []
+    if holdings_count == 0:
+        flags.append("MISSING_HOLDINGS_DATA")
+    if as_of is None:
+        flags.append("MISSING_AS_OF_DATE")
+    if sector_total < 95 or sector_total > 101:
+        flags.append("SECTOR_TOTAL_OUTSIDE_95_101")
+    if unmapped_for_scheme:
+        flags.append("UNMAPPED_EQUITY_INDUSTRY")
+
+    return {
+        "amc": "HDFC Mutual Fund",
+        "scheme_name": scheme_name or source_file,
+        "amc_scheme_code": "",
+        "source_file": source_file,
+        "source_sheet": sheet.title,
+        "as_of_date": as_of.isoformat() if as_of else None,
+        "as_of_month": as_of.strftime("%Y-%m") if as_of else None,
+        "sector_exposure": {sector: (round(value, 4) if abs(value) >= 0.00005 else 0.0) for sector, value in sectors.items()},
+        "sector_total_pct": round(sector_total, 4),
+        "reported_grand_total_pct": round(reported_total_pct, 4) if reported_total_pct is not None else None,
+        "holdings_count": holdings_count,
+        "unmapped_industries": sorted(unmapped_for_scheme),
+        "quality_flags": flags,
+    }
+
+
 def parse_supported_workbook(path: Path, mapping: dict[str, str], unmapped: dict[str, dict[str, Any]]) -> tuple[list[dict[str, Any]], list[str]]:
     workbook = load_workbook(path, read_only=True, data_only=True)
     warnings: list[str] = []
     index_sheet = find_index_sheet(workbook)
     if index_sheet is None:
+        # HDFC publishes individual-scheme workbooks. Each workbook has a holdings
+        # sheet commonly named HDFCEQ plus a separate derivatives disclosure sheet.
+        hdfc_sheet = next(
+            (sheet for sheet in workbook.worksheets if normalise(sheet.title) == "hdfceq"),
+            None,
+        )
+        if hdfc_sheet is not None and find_hdfc_main_table_header(hdfc_sheet):
+            record = process_hdfc_scheme_sheet(hdfc_sheet, mapping, path.name, unmapped)
+            workbook.close()
+            return [record], warnings
         workbook.close()
-        return [], [f"Unsupported workbook layout (no Index sheet): {path.name}"]
+        return [], [f"Unsupported workbook layout (no Index sheet or recognised HDFC HDFCEQ sheet): {path.name}"]
+
     index_entries = build_index_rows(index_sheet)
     if not index_entries:
         workbook.close()
