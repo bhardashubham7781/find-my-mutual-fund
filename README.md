@@ -8,6 +8,8 @@ A free, India-focused mutual fund sector exposure screener. Search and compare s
 
 **How-to guide:** https://bhardashubham7781.github.io/find-my-mutual-fund/guides/compare-mutual-funds-by-sector-exposure.html
 
+**Data and scoring methodology:** https://bhardashubham7781.github.io/find-my-mutual-fund/methodology.html
+
 ## What it does
 
 - Screens mutual funds by disclosed sector exposure.
