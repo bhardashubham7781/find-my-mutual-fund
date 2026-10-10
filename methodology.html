@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <title>Data &amp; Scoring Methodology | Find My Mutual Fund</title>
+  <link rel="canonical" href="https://bhardashubham7781.github.io/find-my-mutual-fund/methodology.html">
+  <meta name="description" content="Read how Find My Mutual Fund processes monthly AMC portfolios, standardises sector labels, matches schemes and calculates user-defined sector exposure scores.">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Data &amp; Scoring Methodology | Find My Mutual Fund">
+  <meta property="og:description" content="Transparent notes on source disclosures, sector mapping, scheme matching, coverage and the mutual fund sector screener's distance score.">
+  <meta property="og:url" content="https://bhardashubham7781.github.io/find-my-mutual-fund/methodology.html">
+  <meta name="twitter:card" content="summary">
+  <style>
+    :root{--ink:#152238;--muted:#52637a;--line:#dfe6ee;--paper:#f6f8fb;--navy:#0b1930;--blue:#2457a7}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.75 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    header{background:var(--navy);color:white;padding:22px 20px}
+    .nav,.article{max-width:850px;margin:auto}
+    .nav{display:flex;justify-content:space-between;gap:16px;align-items:center;font-size:13px;font-weight:700;letter-spacing:.03em}
+    .nav a{color:#d8e5fb}
+    main{padding:30px 20px 48px}
+    article{background:white;border:1px solid var(--line);border-radius:16px;padding:clamp(22px,4vw,42px)}
+    .eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.1em;font-weight:800;color:var(--blue)}
+    h1{font-size:clamp(30px,5vw,44px);line-height:1.15;letter-spacing:-.025em;margin:10px 0 16px}
+    h2{font-size:24px;line-height:1.3;margin:32px 0 10px}
+    h3{font-size:18px;line-height:1.4;margin:24px 0 8px}
+    p,li{color:#34465d}
+    a{color:var(--blue);text-underline-offset:3px}
+    .intro{font-size:18px;color:#42546c}
+    .facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:24px 0}
+    .fact{background:#f1f6ff;border:1px solid #dfe8f8;border-radius:10px;padding:14px}
+    .fact strong{display:block;font-size:24px;line-height:1.3}
+    .fact span{font-size:12px;color:var(--muted)}
+    .note{border-left:4px solid #6e91ce;background:#f1f6ff;padding:14px 16px;margin:22px 0}
+    .cta{display:inline-block;background:var(--navy);color:white;text-decoration:none;font-weight:750;border-radius:9px;padding:11px 16px;margin:10px 0}
+    footer{max-width:850px;margin:0 auto;padding:0 20px 32px;color:var(--muted);font-size:13px}
+    @media(max-width:560px){header{padding:18px 16px}main{padding:18px 12px 30px}article{padding:21px}.facts{grid-template-columns:1fr}}
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Data and Scoring Methodology | Find My Mutual Fund",
+    "url": "https://bhardashubham7781.github.io/find-my-mutual-fund/methodology.html",
+    "description": "Explains the sources, limitations and scoring method used by an Indian mutual fund sector exposure screener.",
+    "isPartOf": {
+      "@type": "WebSite",
+      "name": "Find My Mutual Fund",
+      "url": "https://bhardashubham7781.github.io/find-my-mutual-fund/"
+    }
+  }
+  </script>
+</head>
+<body>
+  <header>
+    <nav class="nav" aria-label="Main navigation">
+      <a href="./">Find My Mutual Fund</a>
+      <a href="./">Open the sector screener →</a>
+    </nav>
+  </header>
+  <main class="article">
+    <article>
+      <div class="eyebrow">Data transparency</div>
+      <h1>Data &amp; scoring methodology</h1>
+      <p class="intro">This page explains the portfolio sources, standard sector mapping, scheme matching and rule-based score used by Find My Mutual Fund. The aim is to make the screener's coverage and limitations visible so you can verify the original disclosure.</p>
+      <div class="facts" aria-label="Current public beta snapshot">
+        <div class="fact"><strong>84</strong><span>Schemes in the current release</span></div>
+        <div class="fact"><strong>3</strong><span>AMCs covered</span></div>
+        <div class="fact"><strong>Sep 2026</strong><span>Portfolio disclosure month</span></div>
+      </div>
+      <a class="cta" href="./">Open the screener</a>
+
+      <h2>1. Portfolio data sources</h2>
+      <p>The current public beta uses selected scheme-matched monthly portfolio disclosures obtained from the following asset management companies. These are links to the official source portals so you can check original records and newer disclosures.</p>
+      <ul>
+        <li><a href="https://www.sbimf.com/portfoliospage_new" rel="noopener">SBI Mutual Fund — portfolio disclosures</a></li>
+        <li><a href="https://www.hdfcfund.com/statutory-disclosure/portfolio/monthly-portfolio" rel="noopener">HDFC Mutual Fund — monthly portfolio disclosures</a></li>
+        <li><a href="https://www.icicipruamc.com/news-and-media/downloads?currentTabFilter=OtherSchemeDisclosures&amp;&amp;subCatTabFilter=Monthly%20Portfolio%20Disclosures" rel="noopener">ICICI Prudential Mutual Fund — monthly portfolio disclosures</a></li>
+        <li><a href="https://www.amfiindia.com/" rel="noopener">AMFI — Association of Mutual Funds in India</a></li>
+      </ul>
+      <p>The current release contains 38 selected SBI Mutual Fund schemes, 45 ICICI Prudential Mutual Fund schemes and 1 HDFC Mutual Fund scheme. It is a limited sample, not a complete catalogue of every Indian mutual fund. Additional AMCs and schemes will be added only after their source files, mappings and scheme matches are reviewed.</p>
+
+      <h2>2. Scheme identification and inclusion</h2>
+      <p>Portfolio names are compared with a review list of scheme names and AMFI scheme codes to match each holding file or workbook to a scheme record. Records that do not have an acceptable scheme match are not published in the screener. The plan, option and scheme category should always be checked against the AMC's original record.</p>
+      <p>The processing workflow also checks for missing holdings and whether the reported portfolio percentages reconcile to an expected range around 100%. These automated checks help catch parsing and completeness issues; they do not prove that every row was classified correctly or replace an independent comparison with the official factsheet.</p>
+
+      <h2>3. Sector mapping</h2>
+      <p>Different AMC documents can use different industry labels. The screener maps source industry labels into 16 broader categories: IT, Banking, Financial Services, Pharma &amp; Healthcare, Auto, FMCG, Energy/Oil &amp; Gas, Power, Metals &amp; Mining, Capital Goods, Construction/Infra, Telecom, Consumer Durables, Realty, Chemicals and Others.</p>
+      <p>Some source industries do not have a direct one-to-one counterpart in this standard list. They may be grouped under “Others”. This makes the category set usable across sources, but it also means the screener's labels may not exactly match the AMC's own sector presentation. Check the original holdings and sector labels when the distinction matters.</p>
+
+      <h2>4. How the distance score works</h2>
+      <p>Users choose the sector rules. For a maximum rule, only the percentage points above the selected maximum contribute to the score. For a minimum rule, only the percentage points below the minimum contribute. For an excluded sector, its reported exposure contributes to the score if it is above zero. Sector gaps are added together across the rules selected by the user.</p>
+      <p>A lower score means a closer match to those selected conditions. A zero score means all chosen rules are met. It is not a rating of investment quality, a measure of total portfolio risk, or a forecast of returns. Leaving a sector at “No preference” means it does not affect the score.</p>
+
+      <h2>5. Update timing and limitations</h2>
+      <p>The current dataset is based on September 2026 disclosures. AMC disclosures may be published after month-end, and the data served by this site can lag the latest files. The scheme list and mapping rules may change as the project adds sources and performs further reviews.</p>
+      <p>This tool is independent and is not an official service of SBI Mutual Fund, HDFC Mutual Fund, ICICI Prudential Mutual Fund or AMFI. Names and trademarks belong to their respective owners.</p>
+
+      <div class="note"><strong>Important:</strong> Data is from AMC monthly portfolio disclosures and may be delayed. Sector classification is a simplification and source labels may be grouped under “Others”. Verify each scheme and its latest allocation against the relevant AMC disclosure. This is not investment advice.</div>
+      <p><a href="./guides/compare-mutual-funds-by-sector-exposure.html">Read the guide to comparing Indian mutual funds by sector exposure →</a></p>
+      <p><a href="./">Return to Find My Mutual Fund →</a></p>
+    </article>
+  </main>
+  <footer>Find My Mutual Fund · Information and comparison tool, not investment advice.</footer>
+</body>
+</html>
