@@ -527,10 +527,10 @@
       host.querySelectorAll("[data-close-details]").forEach(function(b){b.addEventListener("click",function(){expandedFundId=null;renderResults();});});
     }
     function setITZero(){
-      rules.IT={type:"exclude",value:0};renderRuleControls();renderResults();
+      rules.IT={type:"exclude",value:0};invalidateAllocation("Sector rules changed. Generate allocation again to use the updated sector preferences.");renderRuleControls();renderResults();
       document.querySelector(".layout").scrollIntoView({behavior:"smooth",block:"start"});
     }
-    function resetAllRules(){SECTORS.forEach(function(s){rules[s]=Object.assign({},DEFAULT_RULE);});renderRuleControls();renderResults();}
+    function resetAllRules(){SECTORS.forEach(function(s){rules[s]=Object.assign({},DEFAULT_RULE);});invalidateAllocation("Sector rules reset. Generate allocation again to use the current preferences.");renderRuleControls();renderResults();}
     async function loadData(){
       try{
         const response=await fetch("data/processed/funds.json",{cache:"no-store"});
