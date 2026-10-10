@@ -292,6 +292,11 @@
     let funds = [];
     let isDemo = true;
     let expandedFundId = null;
+    const selectedFundKeys = new Set();
+    let investorProfile = null;
+    let currentAllocation = [];
+    let allocationPercents = {};
+    let suggestedAllocationPercents = {};
 
     function round1(n){return Math.round(n*10)/10;}
     function makeDemoExposure(it){
@@ -320,8 +325,8 @@
         const needsValue = r.type==="max" || r.type==="min";
         return '<div class="sector-row"><label class="sector-name" for="rule-'+esc(sector)+'">'+esc(sector)+'</label><div class="sector-control"><select id="rule-'+esc(sector)+'" data-rule-sector="'+esc(sector)+'" aria-label="'+esc(sector)+' rule">'+ruleOptions(r.type)+'</select>'+(needsValue?'<input type="number" min="0" max="100" step="0.5" value="'+esc(r.value)+'" data-rule-value="'+esc(sector)+'" aria-label="'+esc(sector)+' threshold in percent"><span class="sector-unit">%</span>':'')+'</div></div>';
       }).join("");
-      host.querySelectorAll("[data-rule-sector]").forEach(function(el){el.addEventListener("change",function(){rules[el.dataset.ruleSector].type=el.value;renderRuleControls();renderResults();});});
-      host.querySelectorAll("[data-rule-value]").forEach(function(el){el.addEventListener("change",function(){let v=Number(el.value);if(!Number.isFinite(v))v=0;v=Math.max(0,Math.min(100,v));rules[el.dataset.ruleValue].value=v;el.value=String(v);renderResults();});});
+      host.querySelectorAll("[data-rule-sector]").forEach(function(el){el.addEventListener("change",function(){rules[el.dataset.ruleSector].type=el.value;invalidateAllocation("Sector rules changed. Generate allocation again to use the updated sector preferences.");renderRuleControls();renderResults();});});
+      host.querySelectorAll("[data-rule-value]").forEach(function(el){el.addEventListener("change",function(){let v=Number(el.value);if(!Number.isFinite(v))v=0;v=Math.max(0,Math.min(100,v));rules[el.dataset.ruleValue].value=v;el.value=String(v);invalidateAllocation("Sector rules changed. Generate allocation again to use the updated sector preferences.");renderResults();});});
     }
     function activeRules(){return SECTORS.filter(function(s){return rules[s].type!=="none";});}
     function exposureOf(fund,sector){
@@ -371,6 +376,133 @@
       const flags=Array.isArray(fund.quality_flags)&&fund.quality_flags.length?fund.quality_flags.join(", "):"No published quality flags in this view";
       return '<div class="detail"><div class="detail-head"><div><h4>Full sector breakdown</h4><p>Disclosure month: '+esc(asof)+'</p></div><button class="btn-text" data-close-details type="button">Close ×</button></div><div class="detail-grid">'+rows+'</div><div class="detail-foot"><strong>Your active rules:</strong> '+ruleText+'<br><strong>Distance score:</strong> '+score.score.toFixed(1)+' percentage points'+(score.missing?'; '+score.missing+' selected sector(s) have no reported value':'')+'<br><strong>Data checks:</strong> '+esc(flags)+'</div></div>';
     }
+
+    function fundSelectionKey(fund){
+      return String(fund.amfi_scheme_code || (String(fund.amc||"") + "|" + String(fund.scheme_name||"")));
+    }
+    function categoryRiskProxy(fund){
+      const c=String(fund.category||"").toLowerCase();
+      if(c.includes("large cap"))return 2.0;
+      if(c.includes("index"))return 2.2;
+      if(c.includes("flexi cap"))return 2.8;
+      if(c.includes("multi cap")||c.includes("elss")||c.includes("psu"))return 3.2;
+      if(c.includes("mid cap"))return 4.0;
+      if(c.includes("small cap")||c.includes("sectoral")||c.includes("thematic"))return 4.7;
+      return 3.2;
+    }
+    function getProfileFromAnswers(form){
+      const data=new FormData(form);
+      const names=["horizon","reaction","drawdown","priority"];
+      let total=0;
+      for(const name of names){
+        const value=data.get(name);
+        if(value===null)return null;
+        total+=Number(value);
+      }
+      const average=total/names.length;
+      if(average<=0.65)return {label:"Capital-preservation orientation",targetRisk:1.6,score:average,description:"Your answers favour limiting fluctuations and having less exposure to category-level risk."};
+      if(average<=1.3)return {label:"Conservative",targetRisk:2.2,score:average,description:"Your answers lean toward lower relative risk and a more measured approach to growth."};
+      if(average<=2.05)return {label:"Balanced",targetRisk:3.0,score:average,description:"Your answers indicate a balance between accepting volatility and seeking long-term growth."};
+      if(average<=2.65)return {label:"Growth-oriented",targetRisk:3.8,score:average,description:"Your answers show greater willingness to accept fluctuations for long-term growth."};
+      return {label:"Aggressive growth orientation",targetRisk:4.5,score:average,description:"Your answers indicate higher tolerance for volatility and a long investment horizon."};
+    }
+    function refreshSelectedFundCount(){
+      const host=document.getElementById("selectedFundCount");
+      if(!host)return;
+      const count=selectedFundKeys.size;
+      host.textContent=count+" fund"+(count===1?"":"s")+" selected · Choose at least two funds to compare allocations.";
+    }
+    function invalidateAllocation(message){
+      currentAllocation=[];
+      allocationPercents={};
+      suggestedAllocationPercents={};
+      const output=document.getElementById("allocationOutput");
+      const status=document.getElementById("allocationStatus");
+      if(output)output.innerHTML="";
+      if(status)status.textContent=message||"Generate an allocation to see editable percentage weights.";
+    }
+    function percentageShares(items,weightFunction){
+      const total=items.reduce(function(sum,item){return sum+Math.max(0,Number(weightFunction(item))||0);},0);
+      if(!items.length||total<=0)return {};
+      const quotas=items.map(function(item){
+        const exact=(Math.max(0,Number(weightFunction(item))||0)/total)*1000;
+        return {key:item.key,units:Math.floor(exact),remainder:exact-Math.floor(exact)};
+      });
+      let remaining=1000-quotas.reduce(function(sum,q){return sum+q.units;},0);
+      quotas.slice().sort(function(a,b){return b.remainder-a.remainder;}).forEach(function(q){if(remaining>0){q.units++;remaining--;}});
+      const result={};
+      quotas.forEach(function(q){result[q.key]=q.units/10;});
+      return result;
+    }
+    function generateAllocation(){
+      if(!investorProfile){
+        document.getElementById("allocationStatus").textContent="Complete the investor profile quiz first, then generate the allocation.";
+        document.getElementById("investorQuizForm").scrollIntoView({behavior:"smooth",block:"start"});
+        return;
+      }
+      const amount=Number(document.getElementById("investmentAmount").value);
+      if(!Number.isFinite(amount)||amount<=0){
+        document.getElementById("allocationStatus").textContent="Enter a total investment amount greater than ₹0.";
+        return;
+      }
+      const chosen=funds.filter(function(f){return selectedFundKeys.has(fundSelectionKey(f));});
+      if(chosen.length<2){
+        document.getElementById("allocationStatus").textContent="Select at least two funds using “Add to allocation” on the fund cards, then try again.";
+        return;
+      }
+      const hasSectorRules=activeRules().length>0;
+      currentAllocation=chosen.map(function(f){
+        const proxy=categoryRiskProxy(f);
+        const gap=scoreFund(f).score;
+        const riskFit=1/(1+Math.abs(proxy-investorProfile.targetRisk)*0.45);
+        const sectorFit=hasSectorRules?1/(1+gap/12):1;
+        const thematicPenalty=/sectoral|thematic/i.test(String(f.category||""))?0.82:1;
+        return {key:fundSelectionKey(f),fund:f,riskProxy:proxy,sectorGap:gap,weight:riskFit*sectorFit*thematicPenalty};
+      });
+      allocationPercents=percentageShares(currentAllocation,function(item){return item.weight;});
+      suggestedAllocationPercents=Object.assign({},allocationPercents);
+      renderAllocationOutput();
+      document.getElementById("allocationStatus").textContent="Illustrative weights generated for "+chosen.length+" selected funds using your "+investorProfile.label.toLowerCase()+" profile. "+(hasSectorRules?"Your sector rules also influence relative weights.":"No sector rules were set, so weights use the profile proxy only.");
+    }
+    function formatRupees(value){
+      return "₹"+Number(value||0).toLocaleString("en-IN",{maximumFractionDigits:0});
+    }
+    function renderAllocationOutput(){
+      const host=document.getElementById("allocationOutput");
+      if(!host||!currentAllocation.length){if(host)host.innerHTML="";return;}
+      const amount=Number(document.getElementById("investmentAmount").value)||0;
+      const totalPct=currentAllocation.reduce(function(sum,item){return sum+(Number(allocationPercents[item.key])||0);},0);
+      const totalAmount=amount*totalPct/100;
+      const balanced=Math.abs(totalPct-100)<0.051;
+      const rows=currentAllocation.map(function(item){
+        const f=item.fund;
+        const pct=Number(allocationPercents[item.key])||0;
+        const rupees=amount*pct/100;
+        const gap=activeRules().length?item.sectorGap.toFixed(1)+" pp":"Not set";
+        return '<tr><td><strong>'+esc(f.scheme_name||"Unnamed scheme")+'</strong><br><span class="fund-meta">'+esc(f.amc||"AMC not available")+'</span></td><td>'+esc(f.category||"Uncategorised")+'<br><span class="risk-tag">Category proxy '+item.riskProxy.toFixed(1)+'/5</span></td><td><input type="number" min="0" max="100" step="0.1" value="'+pct.toFixed(1)+'" data-allocation-percent="'+esc(item.key)+'" aria-label="Allocation percentage for '+esc(f.scheme_name||"fund")+'"> %</td><td><strong>'+formatRupees(rupees)+'</strong></td><td>'+gap+'</td></tr>';
+      }).join("");
+      host.innerHTML='<div class="allocation-table-wrap"><table class="allocation-table"><thead><tr><th>Selected mutual fund</th><th>Category risk proxy</th><th>Allocation</th><th>Amount</th><th>Sector rule gap</th></tr></thead><tbody>'+rows+'</tbody></table></div><div class="allocation-total"><div><div>Total assigned: '+totalPct.toFixed(1)+'%</div><div class="sub">'+formatRupees(totalAmount)+' of '+formatRupees(amount)+' allocated</div></div><div class="quiz-actions" style="margin:0"><button type="button" class="btn btn-outline" id="normalizeAllocation">Normalize to 100%</button><button type="button" class="btn btn-outline" id="restoreAllocation">Reset suggested weights</button></div></div>'+(balanced?'':'<p class="quiz-error">The manual weights currently total '+totalPct.toFixed(1)+'%. Normalize them to assign exactly 100% of the entered amount.</p>')+'<p class="allocation-note">How the estimate works: funds receive relative weights based on closeness to your quiz profile’s category-risk proxy and, when you set sector rules, the gaps against those rules. The “pp” column means percentage points. This is not based on verified historical returns, volatility or official scheme risk-o-meter data.</p>';
+      host.querySelectorAll("[data-allocation-percent]").forEach(function(input){
+        input.addEventListener("change",function(){
+          const raw=Number(input.value);
+          const val=Number.isFinite(raw)?Math.max(0,Math.min(100,raw)):0;
+          allocationPercents[input.dataset.allocationPercent]=Math.round(val*10)/10;
+          renderAllocationOutput();
+        });
+      });
+      const normalize=document.getElementById("normalizeAllocation");
+      if(normalize)normalize.addEventListener("click",function(){
+        const items=currentAllocation.map(function(item){return {key:item.key,weight:Math.max(0,Number(allocationPercents[item.key])||0)};});
+        allocationPercents=percentageShares(items,function(item){return item.weight;});
+        renderAllocationOutput();
+      });
+      const restore=document.getElementById("restoreAllocation");
+      if(restore)restore.addEventListener("click",function(){
+        allocationPercents=Object.assign({},suggestedAllocationPercents);
+        renderAllocationOutput();
+      });
+    }
+
     function renderResults(){
       const host=document.getElementById("fundResults"), visible=getVisibleFunds();
       document.getElementById("resultsCount").textContent=visible.length+" fund"+(visible.length===1?"":"s")+" shown";
@@ -381,9 +513,17 @@
         const status=sc.missing?"Some selected sector data is missing":(sc.score===0?"All selected rules met":"Rule differences shown below");
         const it=exposureOf(f,"IT"), banking=exposureOf(f,"Banking"), healthcare=exposureOf(f,"Pharma & Healthcare");
         const dataMonth=f.as_of_month||f.as_of_date||"Sample only";
-        return '<article class="fund-card"><div class="fund-top"><div><h3 class="fund-name">'+esc(f.scheme_name||"Unnamed scheme")+'</h3><div class="fund-meta">'+esc(f.amc||"AMC not available")+' · '+esc(f.category||"Category not verified")+'</div><div class="fund-meta">Data month: '+esc(dataMonth)+'</div></div><div class="score"><span class="num">'+(sc.missing?'—':sc.score.toFixed(1))+'</span><span class="label">'+(sc.missing?'Incomplete score':'distance score')+'</span></div></div><div class="matchbar"><span style="width:'+(sc.missing?0:Math.max(0,100-Math.min(100,sc.score)))+'%"></span></div><div class="fund-foot"><div class="exposure-badges"><span class="mini-badge">IT <b>'+pctLabel(it)+'</b></span><span class="mini-badge">Banking <b>'+pctLabel(banking)+'</b></span><span class="mini-badge">Healthcare <b>'+pctLabel(healthcare)+'</b></span></div><button type="button" class="btn" data-detail-id="'+esc(id)+'">'+(open?'Hide breakdown':'Full breakdown ↗')+'</button></div><div class="no-rules">'+esc(status)+'</div>'+(open?detailsMarkup(f):'')+'</article>';
+        return '<article class="fund-card"><div class="fund-top"><div><h3 class="fund-name">'+esc(f.scheme_name||"Unnamed scheme")+'</h3><div class="fund-meta">'+esc(f.amc||"AMC not available")+' · '+esc(f.category||"Category not verified")+'</div><div class="fund-meta">Data month: '+esc(dataMonth)+'</div></div><div class="score"><span class="num">'+(sc.missing?'—':sc.score.toFixed(1))+'</span><span class="label">'+(sc.missing?'Incomplete score':'distance score')+'</span></div></div><div class="matchbar"><span style="width:'+(sc.missing?0:Math.max(0,100-Math.min(100,sc.score)))+'%"></span></div><div class="fund-foot"><div class="exposure-badges"><span class="mini-badge">IT <b>'+pctLabel(it)+'</b></span><span class="mini-badge">Banking <b>'+pctLabel(banking)+'</b></span><span class="mini-badge">Healthcare <b>'+pctLabel(healthcare)+'</b></span></div><label class="card-select"><input type="checkbox" data-add-fund="'+esc(fundSelectionKey(f))+'" '+(selectedFundKeys.has(fundSelectionKey(f))?'checked':'')+'>Add to allocation</label><button type="button" class="btn" data-detail-id="'+esc(id)+'">'+(open?'Hide breakdown':'Full breakdown ↗')+'</button></div><div class="no-rules">'+esc(status)+'</div>'+(open?detailsMarkup(f):'')+'</article>';
       }).join("");
       host.querySelectorAll("[data-detail-id]").forEach(function(b){b.addEventListener("click",function(){expandedFundId=expandedFundId===b.dataset.detailId?null:b.dataset.detailId;renderResults();});});
+      host.querySelectorAll("[data-add-fund]").forEach(function(el){
+        el.addEventListener("change",function(){
+          const key=el.dataset.addFund;
+          if(el.checked)selectedFundKeys.add(key);else selectedFundKeys.delete(key);
+          invalidateAllocation("Fund selection changed. Generate allocation again to apply the current selection.");
+          refreshSelectedFundCount();
+        });
+      });
       host.querySelectorAll("[data-close-details]").forEach(function(b){b.addEventListener("click",function(){expandedFundId=null;renderResults();});});
     }
     function setITZero(){
@@ -407,6 +547,40 @@
       }
       populateFilters();renderRuleControls();renderResults();
     }
+
+    const investorQuizForm=document.getElementById("investorQuizForm");
+    investorQuizForm.addEventListener("submit",function(event){
+      event.preventDefault();
+      const result=getProfileFromAnswers(investorQuizForm);
+      if(!result){document.getElementById("quizError").textContent="Please answer all four questions.";return;}
+      investorProfile=result;
+      document.getElementById("quizError").textContent="";
+      const resultHost=document.getElementById("quizResult");
+      const safety=result.targetRisk<2.5?" This screener currently covers selected mutual fund schemes only; it does not build a complete capital-preservation portfolio across cash, debt and other asset classes.":" This is only a broad category-level starting profile, not a regulated suitability assessment.";
+      resultHost.innerHTML='<strong>Profile result: '+esc(result.label)+'</strong><p>'+esc(result.description)+' Your answers score '+result.score.toFixed(2)+' out of 3 on this simple questionnaire. '+esc(safety)+' You can still change every allocation percentage manually.</p>';
+      resultHost.classList.add("visible");
+      invalidateAllocation("Investor profile updated. Select your funds and generate a fresh allocation.");
+    });
+    investorQuizForm.addEventListener("change",function(){
+      investorProfile=null;
+      document.getElementById("quizResult").classList.remove("visible");
+      invalidateAllocation("Your quiz answers changed. Calculate your profile again before generating an allocation.");
+    });
+    investorQuizForm.addEventListener("reset",function(){
+      investorProfile=null;
+      document.getElementById("quizResult").classList.remove("visible");
+      document.getElementById("quizError").textContent="";
+      invalidateAllocation("Complete the investor profile quiz and select at least two funds to begin.");
+    });
+    document.getElementById("generateAllocation").addEventListener("click",generateAllocation);
+    document.getElementById("clearAllocation").addEventListener("click",function(){
+      selectedFundKeys.clear();
+      renderResults();
+      invalidateAllocation("Fund selection cleared. Choose funds from the list above.");
+      refreshSelectedFundCount();
+    });
+    document.getElementById("investmentAmount").addEventListener("input",renderAllocationOutput);
+
     document.getElementById("heroPreset").addEventListener("click",setITZero);
     document.getElementById("itPreset").addEventListener("click",setITZero);
     document.getElementById("resetRules").addEventListener("click",resetAllRules);
@@ -414,6 +588,7 @@
     document.getElementById("categoryFilter").addEventListener("change",renderResults);
     document.getElementById("amcFilter").addEventListener("change",renderResults);
     document.getElementById("fundSearch").addEventListener("input",renderResults);
+    refreshSelectedFundCount();
     loadData();
   </script>
 </body>
