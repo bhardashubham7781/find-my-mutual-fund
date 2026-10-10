@@ -1,0 +1,150 @@
+name: Publish current three-AMC beta data
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/publish-current-data.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  publish-current-data:
+    if: github.event.head_commit.message == 'Publish current three-AMC beta'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out project
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Install processor requirements
+        run: pip install -r requirements.txt
+
+      - name: Build the current AMC data
+        run: python process_portfolios.py
+
+      - name: Enable only clean, scheme-matched records from current AMCs
+        run: |
+          python - <<'PY'
+          import csv
+          import json
+          from pathlib import Path
+
+          json_path = Path("data/processed/funds.json")
+          with json_path.open(encoding="utf-8") as f:
+              payload = json.load(f)
+
+          allowed_amcs = {
+              "SBI Mutual Fund",
+              "HDFC Mutual Fund",
+              "ICICI Prudential Mutual Fund",
+          }
+          selected = []
+          for fund in payload.get("funds", []):
+              code = str(fund.get("amfi_scheme_code") or "").strip()
+              total = fund.get("sector_total_pct")
+              if (
+                  fund.get("amc") in allowed_amcs
+                  and fund.get("scheme_master_status") == "matched_not_eligible"
+                  and code
+                  and not fund.get("quality_flags")
+                  and isinstance(total, (int, float))
+                  and 95 <= total <= 101
+              ):
+                  selected.append(fund)
+
+          codes = {str(f["amfi_scheme_code"]).strip() for f in selected}
+          if len(selected) != 84 or len(codes) != 84:
+              raise SystemExit(
+                  f"Stopped before publication: expected 84 unique clean matched records; "
+                  f"found {len(selected)} records and {len(codes)} unique codes."
+              )
+
+          master_path = Path("config/scheme_master.csv")
+          with master_path.open(encoding="utf-8-sig", newline="") as f:
+              reader = csv.DictReader(f)
+              fieldnames = reader.fieldnames
+              rows = list(reader)
+
+          enabled = 0
+          for row in rows:
+              code = str(row.get("amfi_scheme_code") or "").strip()
+              if code in codes and row.get("amc") in allowed_amcs:
+                  row["include_v1"] = "true"
+                  enabled += 1
+
+          if enabled != 84:
+              raise SystemExit(
+                  f"Stopped before publication: expected to enable 84 scheme-master rows; "
+                  f"enabled {enabled}."
+              )
+
+          with master_path.open("w", encoding="utf-8-sig", newline="") as f:
+              writer = csv.DictWriter(f, fieldnames=fieldnames)
+              writer.writeheader()
+              writer.writerows(rows)
+
+          print(f"Enabled {enabled} scheme-matched records for the limited public beta.")
+          PY
+
+      - name: Rebuild using the public-beta eligibility list
+        run: python process_portfolios.py
+
+      - name: Validate and label the public-beta dataset
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path("data/processed/funds.json")
+          with path.open(encoding="utf-8") as f:
+              payload = json.load(f)
+
+          eligible = [f for f in payload.get("funds", []) if f.get("include_v1") is True]
+          allowed_amcs = {
+              "SBI Mutual Fund",
+              "HDFC Mutual Fund",
+              "ICICI Prudential Mutual Fund",
+          }
+          if len(eligible) != 84:
+              raise SystemExit(f"Expected 84 public-beta funds; found {len(eligible)}.")
+          if {f.get("amc") for f in eligible} != allowed_amcs:
+              raise SystemExit("Published dataset does not contain exactly the intended three AMCs.")
+          for fund in eligible:
+              total = fund.get("sector_total_pct")
+              if fund.get("quality_flags") or not isinstance(total, (int, float)) or not 95 <= total <= 101:
+                  raise SystemExit(f"Quality validation failed for {fund.get('scheme_name')}.")
+              if not fund.get("amfi_scheme_code"):
+                  raise SystemExit(f"Scheme code missing for {fund.get('scheme_name')}.")
+
+          payload["note"] = (
+              "Public beta with limited coverage: scheme-matched September 2026 portfolios from "
+              "SBI Mutual Fund, HDFC Mutual Fund and ICICI Prudential Mutual Fund only. "
+              "Unmatched schemes and other AMCs are excluded. Some source industry labels are "
+              "grouped under Others; confirm allocations against the relevant AMC factsheet."
+          )
+          payload["release"] = {
+              "status": "public_beta",
+              "as_of_month": "2026-09",
+              "eligible_scheme_count": len(eligible),
+              "amcs": sorted(allowed_amcs),
+          }
+          with path.open("w", encoding="utf-8") as f:
+              json.dump(payload, f, ensure_ascii=False, separators=(",", ":"))
+          print(f"Validated {len(eligible)} scheme-matched public-beta funds.")
+          PY
+
+      - name: Commit the public dataset
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add config/scheme_master.csv
+          git add -f data/processed/funds.json
+          git commit -m "Publish September 2026 three-AMC beta dataset"
+          git push
